@@ -1,12 +1,16 @@
-# Sample testbench for a Tiny Tapeout project
+# ChipLab Testbench
 
-This is a sample testbench for a Tiny Tapeout project. It uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
+The ChipLab testbench uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
 See below to get started or for more information, check the [website](https://tinytapeout.com/hdl/testing/).
 
 ## Setting up
 
 1. Edit [Makefile](Makefile) and modify `PROJECT_SOURCES` to point to your Verilog files.
-2. Edit [tb.v](tb.v) and replace `tt_um_example` with your module name.
+2. Keep the top module in [tb.v](tb.v) and `info.yaml` consistent (`tt_um_chiplab`).
+
+See [Local Simulation](../docs/local-simulation.md) for Python environment setup.
+The tests verify the basic gates and Boolean identities described in the
+[project documentation](../docs/info.md).
 
 ## How to run
 

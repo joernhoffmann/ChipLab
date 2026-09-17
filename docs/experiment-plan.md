@@ -96,11 +96,12 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiment selection is planned through `uio_in[7:0]`. The experiment numbers
-above indicate teaching order; selection codes are not yet assigned. Each
-experiment requires a pin mapping, control inputs, and an output representation.
-Reset behavior, experiment switching, invalid selection codes, clock frequency,
-and timer intervals remain to be specified.
+Experiment selection uses `uio_in[7:0]`. Codes `0x01` and `0x02` select the
+implemented basic gates and Boolean identities; other codes currently produce
+zero. See [the project description](info.md) for their pin mapping and behavior.
+The experiment numbers indicate teaching order. Selection codes and interfaces
+for the remaining experiments, including their reset and timing behavior, are
+not yet specified.
 
 ## Implementation Considerations
 

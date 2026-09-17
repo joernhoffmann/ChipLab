@@ -74,21 +74,22 @@ List RTL files in both `info.yaml` (`source_files`) and `test/Makefile`
 (`PROJECT_SOURCES`). The top module in `info.yaml` must match the module instantiated
 by `test/tb.v`. Functional tests belong in `test/test.py`.
 
-The current RTL is the template’s 8-bit adder:
-`uo_out = (ui_in + uio_in) mod 256`. Both `uio_out` and `uio_oe` are zero.
-The supplied cocotb test checks that inputs 20 and 30 produce output 50.
-The ChipLab experiments are specified in [the experiment plan](experiment-plan.md).
+The current RTL implements basic gates and Boolean identities in SystemVerilog.
+See [the project description](info.md) for selection codes, pin assignments, and
+output functions. The cocotb tests check truth tables, selection decoding, and
+control-input independence.
 
 ## Lint
 
 From the repository root:
 
 ```sh
-verilator --lint-only -Wall -Wno-DECLFILENAME src/project.v
+verilator --lint-only -Wall --top-module tt_um_chiplab src/*.sv
 ```
 
-`-Wno-DECLFILENAME` suppresses the filename warning because `project.v` contains
-module `tt_um_example`.
+The RTL module names match their `.sv` filenames. Icarus uses SystemVerilog
+2012 mode through the cocotb Makefile; `TOPLEVEL_LANG` remains `verilog` for
+SystemVerilog sources.
 
 ## Gate-Level Simulation
 
