@@ -1,11 +1,13 @@
 .DS_Store
 .venv/
+.venv_asic
 .tools/
 .idea
 *.vcd
 *.fst
 *.fst.hier
 runs
+tt
 tt_submission
 src/user_config.json
 src/config_merged.json
