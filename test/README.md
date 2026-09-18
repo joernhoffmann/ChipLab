@@ -11,6 +11,7 @@ See below to get started or for more information, check the [website](https://ti
 | `chiplab_helpers.py` | Initializes inputs, waits for settling, checks IO direction, and reports bit-level failures |
 | `test_01_basic_gates.py` | Experiment 1: all basic gate truth tables |
 | `test_02_boolean_identities.py` | Experiment 2: separate tests for De Morgan’s laws, distributivity, and absorption |
+| `test_03_multiplexer.py` through `test_13_rom.py` | One file per section 2 experiment; all 256 input bytes checked |
 | `test_interface.py` | Selection decoding, unused input bits, and control-input independence |
 
 The experiment tests follow **initialize → apply inputs → wait → check outputs**.
@@ -24,7 +25,7 @@ silicon propagation delay. All tests access only public ports, allowing the same
 checks to run against RTL and the gate-level netlist.
 
 Use one file per experiment, numbered according to the experiment plan. Add
-future experiments as `test_03_multiplexer.py`, etc., and register them in
+future experiments as `test_14_half_adder.py`, etc., and register them in
 `COCOTB_TEST_MODULES` in the Makefile. Sequential experiments should explicitly
 provide their required clock and reset sequence. RTL files remain organized by
 curriculum block; their numbering is independent of test experiment numbering.
@@ -35,7 +36,7 @@ curriculum block; their numbering is independent of test experiment numbering.
 2. Keep the top module in [tb.v](tb.v) and `info.yaml` consistent (`tt_um_chiplab`).
 
 See [Local Simulation](../docs/local-simulation.md) for Python environment setup.
-The tests verify the basic gates and Boolean identities described in the
+The tests verify the implemented experiments described in the
 [project documentation](../docs/info.md).
 
 ## How to run

@@ -1,24 +1,23 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 1: basic gates (selection 0x01).
-
-A is ui_in[0], B is ui_in[1]; the remaining input bits are unused.
+A is ui_in[0].
+B is ui_in[1]. 
+The remaining input bits are unused.
 The truth table lists each output explicitly, independently of the RTL.
 """
 import cocotb
-
 from chiplab_helpers import BASIC_GATES, check_bit, initialize, sample
 
-
-# Columns: A, B, NOT A, NOT B, AND, OR, NAND, NOR, XOR, XNOR.
-# The eight result columns correspond to uo_out[0] through uo_out[7].
 GATE_ROWS = (
-    (0, 0, 1, 1, 0, 0, 1, 1, 0, 1),
-    (0, 1, 1, 0, 0, 1, 1, 0, 1, 0),
-    (1, 0, 0, 1, 0, 1, 1, 0, 1, 0),
-    (1, 1, 0, 0, 1, 1, 0, 0, 0, 1),
+   #            uo_out[0] ... uo_out[7].
+   # A, B,      NOT A, NOT B, AND, OR, NAND, NOR, XOR, XNOR
+    (0, 0,      1, 1, 0, 0, 1, 1, 0, 1),
+    (0, 1,      1, 0, 0, 1, 1, 0, 1, 0),
+    (1, 0,      0, 1, 0, 1, 1, 0, 1, 0),
+    (1, 1,      0, 0, 1, 1, 0, 0, 0, 1),
 )
-GATE_NAMES = ("NOT A", "NOT B", "AND", "OR", "NAND", "NOR", "XOR", "XNOR")
 
+GATE_NAMES = ("NOT A", "NOT B", "AND", "OR", "NAND", "NOR", "XOR", "XNOR")
 
 @cocotb.test()
 async def test_basic_gates(dut):

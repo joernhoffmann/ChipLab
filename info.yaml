@@ -19,19 +19,20 @@ project:
   source_files:
     - "tt_um_chiplab.sv"
     - "chiplab_01_basic_boolean.sv"
+    - "chiplab_02_selection_coding.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: "A"
-  ui[1]: "B"
-  ui[2]: "C"
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  ui[0]: "Data 0"
+  ui[1]: "Data 1"
+  ui[2]: "Data 2"
+  ui[3]: "Data 3"
+  ui[4]: "Data 4"
+  ui[5]: "Data 5"
+  ui[6]: "Data 6"
+  ui[7]: "Data 7"
 
   # Outputs
   uo[0]: "Result 0"

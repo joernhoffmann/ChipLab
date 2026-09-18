@@ -6,7 +6,7 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(CURDIR)/../src
-PROJECT_SOURCES = tt_um_chiplab.sv chiplab_01_basic_boolean.sv
+PROJECT_SOURCES = tt_um_chiplab.sv chiplab_01_basic_boolean.sv chiplab_02_selection_coding.sv
 
 ifneq ($(GATES),yes)
 
@@ -37,7 +37,7 @@ VERILOG_SOURCES += $(CURDIR)/tb.v
 TOPLEVEL = tb
 
 # List test modules to run, separated by commas and without the .py suffix:
-COCOTB_TEST_MODULES = test_01_basic_gates,test_02_boolean_identities,test_interface
+COCOTB_TEST_MODULES = test_01_basic_gates,test_02_boolean_identities,test_03_multiplexer,test_04_demultiplexer,test_05_binary_decoder,test_06_encoder,test_07_priority_encoder,test_08_dual_priority_encoder,test_09_bcd_decoder,test_10_hex_decoder,test_11_gray_code,test_12_parity,test_13_rom,test_interface
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim

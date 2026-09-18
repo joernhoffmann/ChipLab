@@ -16,67 +16,68 @@ and finite state machines with datapaths.
 5. Binary decoder
 6. Encoder
 7. Priority encoder
-8. BCD-to-7-segment decoder
-9. Hexadecimal-to-7-segment decoder
-10. Binary ↔ Gray code conversion
-11. Parity generator and checker
-12. Small ROM as a lookup table
+8. Dual-priority encoder
+9. BCD-to-7-segment decoder
+10. Hexadecimal-to-7-segment decoder
+11. Binary ↔ Gray code conversion
+12. Parity generator and checker
+13. Small ROM as a lookup table
 
 ## 3. Arithmetic and Data Operations
 
-13. Half adder
-14. Full adder
-15. 4-bit adder
-16. 4-bit subtractor and two’s complement
-17. Unsigned comparator
-18. Signed comparator
-19. Logical and arithmetic shifts
-20. Rotation
-21. Arithmetic logic unit (ALU)
-22. Accumulator — ALU, result register, and feedback
+14. Half adder
+15. Full adder
+16. 4-bit adder
+17. 4-bit subtractor and two’s complement
+18. Unsigned comparator
+19. Signed comparator
+20. Logical and arithmetic shifts
+21. Rotation
+22. Arithmetic logic unit (ALU)
+23. Accumulator (with ALU, result register, and feedback)
 
 ## 4. Storage Elements and Memory
 
-23. SR latch
-24. D latch
-25. D flip-flop — comparison with the D latch
-26. T flip-flop
-27. JK flip-flop
-28. Synchronous and asynchronous reset
-29. Register with enable
-30. Register with parallel load, hold, and clear
-31. Small read/write memory
+24. SR latch
+25. D latch
+26. D flip-flop - comparison with the D latch
+27. T flip-flop
+28. JK flip-flop
+29. Synchronous and asynchronous reset
+30. Register with enable
+31. Register with parallel load, hold, and clear
+32. Small read/write memory
 
 ## 5. Shift Registers and Counters
 
-32. Shift register
-33. Universal shift register — parallel load and left/right shift
-34. Binary counter
-35. Up/down counter
-36. Modulo counter
-37. BCD counter
-38. Ring counter
-39. Johnson counter
-40. Linear-feedback shift register (LFSR)
+33. Shift register
+34. Universal shift register (parallel load and left/right shift)
+35. Binary counter
+36. Up/down counter
+37. Modulo counter
+38. BCD counter
+39. Ring counter
+40. Johnson counter
+41. Linear-feedback shift register (LFSR)
 
 ## 6. Input Synchronization and Timing
 
-41. Edge detection and pulse generation
-42. Synchronization of asynchronous inputs
-43. Push-button debouncing
-44. Clock division using clock enable
-45. Pulse-width modulation (PWM)
+42. Edge detection and pulse generation
+43. Synchronization of asynchronous inputs
+44. Push-button debouncing
+45. Clock division using clock enable
+46. Pulse-width modulation (PWM)
 
 ## 7. Finite State Machines
 
-46. Moore sequence detector
-47. Mealy sequence detector
-48. Traffic light controller
-49. Handshake controller
+47. Moore sequence detector
+48. Mealy sequence detector
+49. Traffic light controller
+50. Handshake controller
 
 ## 8. FSM-Controlled Datapaths
 
-50. Sequential multiplier — shift-and-add datapath controlled by an FSM
+51. Sequential multiplier (shift-and-add datapath controlled by an FSM)
 
 ## Design Targets
 
@@ -96,12 +97,10 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiment selection uses `uio_in[7:0]`. Codes `0x01` and `0x02` select the
-implemented basic gates and Boolean identities; other codes currently produce
-zero. See [the project description](info.md) for their pin mapping and behavior.
-The experiment numbers indicate teaching order. Selection codes and interfaces
-for the remaining experiments, including their reset and timing behavior, are
-not yet specified.
+Experiments 1–13 are implemented. `uio_in[7:0]` selects the experiment using its
+number: 1 = `0x01`, 10 = `0x0A`, 13 = `0x0D`. Other codes currently return zero.
+See [the project description](info.md) for pin mappings and behavior.
+Interfaces for later experiments remain to be specified.
 
 ## Implementation Considerations
 
