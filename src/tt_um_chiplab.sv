@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 `default_nettype none
+`include "chiplab_experiments.svh"
 
 module tt_um_chiplab (
     input  wire  [7:0] ui_in,
@@ -70,7 +71,7 @@ module tt_um_chiplab (
     chiplab_03_arithmetic_data arithmetic_data (
         .data(ui_in),
         .operation(uio_in[7:6]),
-        .accumulator_selected(uio_in[5:0] == 6'd33),
+        .accumulator_selected(uio_in[5:0] == `EXP_ACCUMULATOR),
         .accumulator_value(accumulator_value),
         .half_adder_result(half_adder_result),
         .full_adder_result(full_adder_result),
@@ -117,44 +118,82 @@ module tt_um_chiplab (
         .accumulator_result(accumulator_result)
     );
 
+    // --------------------------------------------------------------------
+    // Group 5: Shift Registers and Counters
+    // --------------------------------------------------------------------
+    wire [7:0] shift_register_result;
+    wire [7:0] universal_shift_register_result;
+    wire [7:0] binary_counter_result;
+    wire [7:0] up_down_counter_result;
+    wire [7:0] modulo_counter_result;
+    wire [7:0] bcd_counter_result;
+    wire [7:0] ring_counter_result;
+    wire [7:0] johnson_counter_result;
+    wire [7:0] lfsr_result;
+    chiplab_05_shift_counters shift_counters (
+        .clk(clk),
+        .rst_n(rst_n),
+        .selection(uio_in[5:0]),
+        .operation(uio_in[7:6]),
+        .data(ui_in),
+        .shift_register_result(shift_register_result),
+        .universal_shift_register_result(universal_shift_register_result),
+        .binary_counter_result(binary_counter_result),
+        .up_down_counter_result(up_down_counter_result),
+        .modulo_counter_result(modulo_counter_result),
+        .bcd_counter_result(bcd_counter_result),
+        .ring_counter_result(ring_counter_result),
+        .johnson_counter_result(johnson_counter_result),
+        .lfsr_result(lfsr_result)
+    );
+
     // ------------------------------------------------------------------------
     // Main experiment selection
     // ------------------------------------------------------------------------
     always_comb begin
         case (uio_in[5:0])
-            6'h01: uo_out = gates;
-            6'h02: uo_out = boolean_laws;
-            6'h03: uo_out = mux_result;
-            6'h04: uo_out = demux_result;
-            6'h05: uo_out = decoder_result;
-            6'h06: uo_out = encoder_result;
-            6'h07: uo_out = priority_result;
-            6'h08: uo_out = dual_priority;
-            6'h09: uo_out = bcd_segments;
-            6'h0A: uo_out = hex_segments;
-            6'h0B: uo_out = gray_result;
-            6'h0C: uo_out = parity_result;
-            6'h0D: uo_out = rom_result;
-            6'h0E: uo_out = half_adder_result;
-            6'h0F: uo_out = full_adder_result;
-            6'h10: uo_out = adder_result;
-            6'h11: uo_out = subtractor_result;
-            6'h12: uo_out = unsigned_compare_result;
-            6'h13: uo_out = signed_compare_result;
-            6'h14: uo_out = shift_result;
-            6'h15: uo_out = rotate_result;
-            6'h16: uo_out = alu_result;
-            6'h17: uo_out = sr_latch_result;
-            6'h18: uo_out = d_latch_result;
-            6'h19: uo_out = d_flipflop_result;
-            6'h1A: uo_out = t_ff_result;
-            6'h1B: uo_out = jk_ff_result;
-            6'h1C: uo_out = latch_ff_result;
-            6'h1D: uo_out = reset_result;
-            6'h1E: uo_out = register_enable_result;
-            6'h1F: uo_out = register_control_result;
-            6'h20: uo_out = memory_result;
-            6'h21: uo_out = accumulator_result;
+            `EXP_BASIC_GATES: uo_out = gates;
+            `EXP_BOOLEAN_IDENTITIES: uo_out = boolean_laws;
+            `EXP_MULTIPLEXER: uo_out = mux_result;
+            `EXP_DEMULTIPLEXER: uo_out = demux_result;
+            `EXP_BINARY_DECODER: uo_out = decoder_result;
+            `EXP_ENCODER: uo_out = encoder_result;
+            `EXP_PRIORITY_ENCODER: uo_out = priority_result;
+            `EXP_DUAL_PRIORITY: uo_out = dual_priority;
+            `EXP_BCD_DECODER: uo_out = bcd_segments;
+            `EXP_HEX_DECODER: uo_out = hex_segments;
+            `EXP_GRAY_CODE: uo_out = gray_result;
+            `EXP_PARITY: uo_out = parity_result;
+            `EXP_ROM: uo_out = rom_result;
+            `EXP_HALF_ADDER: uo_out = half_adder_result;
+            `EXP_FULL_ADDER: uo_out = full_adder_result;
+            `EXP_ADDER_4BIT: uo_out = adder_result;
+            `EXP_SUBTRACTOR_4BIT: uo_out = subtractor_result;
+            `EXP_UNSIGNED_COMPARATOR: uo_out = unsigned_compare_result;
+            `EXP_SIGNED_COMPARATOR: uo_out = signed_compare_result;
+            `EXP_SHIFTS: uo_out = shift_result;
+            `EXP_ROTATION: uo_out = rotate_result;
+            `EXP_ALU: uo_out = alu_result;
+            `EXP_SR_LATCH: uo_out = sr_latch_result;
+            `EXP_D_LATCH: uo_out = d_latch_result;
+            `EXP_D_FLIPFLOP: uo_out = d_flipflop_result;
+            `EXP_T_FLIPFLOP: uo_out = t_ff_result;
+            `EXP_JK_FLIPFLOP: uo_out = jk_ff_result;
+            `EXP_LATCH_FLIPFLOP: uo_out = latch_ff_result;
+            `EXP_RESET: uo_out = reset_result;
+            `EXP_REGISTER_ENABLE: uo_out = register_enable_result;
+            `EXP_REGISTER_CONTROL: uo_out = register_control_result;
+            `EXP_MEMORY: uo_out = memory_result;
+            `EXP_ACCUMULATOR: uo_out = accumulator_result;
+            `EXP_SHIFT_REGISTER: uo_out = shift_register_result;
+            `EXP_UNIVERSAL_SHIFT_REGISTER: uo_out = universal_shift_register_result;
+            `EXP_BINARY_COUNTER: uo_out = binary_counter_result;
+            `EXP_UP_DOWN_COUNTER: uo_out = up_down_counter_result;
+            `EXP_MODULO_COUNTER: uo_out = modulo_counter_result;
+            `EXP_BCD_COUNTER: uo_out = bcd_counter_result;
+            `EXP_RING_COUNTER: uo_out = ring_counter_result;
+            `EXP_JOHNSON_COUNTER: uo_out = johnson_counter_result;
+            `EXP_LFSR: uo_out = lfsr_result;
             default: uo_out = 8'b0;
         endcase
     end

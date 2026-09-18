@@ -6,7 +6,8 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(CURDIR)/../src
-PROJECT_SOURCES = tt_um_chiplab.sv chiplab_01_basic_boolean.sv chiplab_02_selection_coding.sv chiplab_03_arithmetic_data.sv chiplab_04_storage_memory.sv
+CUSTOM_COMPILE_DEPS += $(SRC_DIR)/chiplab_experiments.svh
+PROJECT_SOURCES = tt_um_chiplab.sv chiplab_01_basic_boolean.sv chiplab_02_selection_coding.sv chiplab_03_arithmetic_data.sv chiplab_04_storage_memory.sv chiplab_05_shift_counters.sv
 
 ifneq ($(GATES),yes)
 
@@ -42,7 +43,8 @@ TEST_GRP02_SEL		= test_03_multiplexer,test_04_demultiplexer,test_05_binary_decod
 TEST_GRP03_ARITH 	= test_14_half_adder,test_15_full_adder,test_16_adder_4bit,test_17_subtractor_4bit,test_18_unsigned_comparator,test_19_signed_comparator,test_20_shifts,test_21_rotation,test_22_alu
 TEST_GRP04_STORE 	= test_23_sr_latch,test_24_d_latch,test_25_d_flipflop,test_26_t_flipflop,test_27_jk_flipflop,test_28_latch_flipflop,test_29_reset,test_30_register_enable,test_31_register_control,test_32_memory,test_33_accumulator
 TEST_OTHER			= test_interface
-COCOTB_TEST_MODULES = $(TEST_GRP01_GATES),$(TEST_GRP02_SEL),$(TEST_GRP03_ARITH),$(TEST_GRP04_STORE),$(TEST_OTHER)
+TEST_GRP05_COUNT = test_34_shift_register,test_35_universal_shift_register,test_36_binary_counter,test_37_up_down_counter,test_38_modulo_counter,test_39_bcd_counter,test_40_ring_counter,test_41_johnson_counter,test_42_lfsr
+COCOTB_TEST_MODULES = $(TEST_GRP01_GATES),$(TEST_GRP02_SEL),$(TEST_GRP03_ARITH),$(TEST_GRP04_STORE),$(TEST_GRP05_COUNT),$(TEST_OTHER)
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim

@@ -77,7 +77,7 @@ by `test/tb.v`. Each experiment has its own test file: `test/test_01_basic_gates
 `test/test_interface.py`. See [the test guide](../test/README.md) for individual
 test commands and the test structure.
 
-The current RTL implements sections 1–3 in SystemVerilog.
+The current RTL implements sections 1–5 in SystemVerilog.
 See [the project description](info.md) for selection codes, pin assignments, and
 output functions. The cocotb tests check truth tables, selection decoding, and
 control-input independence.
@@ -87,7 +87,7 @@ control-input independence.
 From the repository root:
 
 ```sh
-verilator --lint-only -Wall --top-module tt_um_chiplab src/*.sv
+verilator --lint-only -Wall -Isrc --top-module tt_um_chiplab src/*.sv
 ```
 
 The RTL module names match their `.sv` filenames. Icarus uses SystemVerilog

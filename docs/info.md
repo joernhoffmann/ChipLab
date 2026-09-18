@@ -1,7 +1,7 @@
 # ChipLab
 
 ChipLab is an educational digital logic chip for Tiny Tapeout IHP26b.
-Sections 1–4 are implemented: logic, coding, arithmetic, storage, and memory.
+Sections 1–5 are implemented: logic, coding, arithmetic, storage, and counters.
 
 ## How it works
 
@@ -46,10 +46,19 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x1F` | Register with load, hold, and clear |
 | `0x20` | 4 × 4-bit read/write memory |
 | `0x21` | Accumulator |
+| `0x22` | Shift register |
+| `0x23` | Universal shift register |
+| `0x24` | Binary counter |
+| `0x25` | Up/down counter |
+| `0x26` | Modulo-6 counter |
+| `0x27` | BCD counter |
+| `0x28` | Ring counter |
+| `0x29` | Johnson counter |
+| `0x2A` | LFSR |
 | All other codes | All outputs zero |
 
-Experiments 1–22 are combinational. Experiments 23–33 store state and use
-`clk` or latch controls. `rst_n` clears their state. Allow signals to settle
+Experiments 1–22 are combinational. Experiments 23–42 store state and use
+`clk` or latch controls. `rst_n` resets their state. Allow signals to settle
 before sampling.
 
 | Output bit | Basic gates (`0x01`) | Boolean identities (`0x02`) |
@@ -155,6 +164,40 @@ feeds its low four bits back into the same ALU used by experiment 22.
 `uio_in[7:6]` selects add, subtract, AND, or OR.
 
 ## How to test
+
+### Shift registers and counters
+
+Experiments 34–42 use four bits, shown on `uo_out[3:0]`; bits 7–4 are zero.
+They update on rising clock edges only while selected. Switching experiments
+preserves their state. Active-low `rst_n` resets all of them asynchronously:
+ring counter and LFSR start at `0001`, the others at `0000`.
+
+| Code | Inputs and behavior |
+|---|---|
+| `0x22` | Shift left; serial input `ui_in[0]`, enable `ui_in[4]` |
+| `0x23` | Universal shift register; operation 0 hold, 1 left, 2 right, 3 parallel load |
+| `0x24` | Binary counter: 0–15, then 0 |
+| `0x25` | Up/down counter; `ui_in[0]` = 0 up, 1 down; wraps at 0 and 15 |
+| `0x26` | Modulo-6 counter: 0–5, then 0 |
+| `0x27` | BCD counter: 0–9, then 0 |
+| `0x28` | Ring counter: 1, 2, 4, 8, 1 |
+| `0x29` | Johnson counter: 0, 1, 3, 7, 15, 14, 12, 8, 0 |
+| `0x2A` | LFSR: left shift with XOR feedback from bits 3 and 2; 15 nonzero states |
+
+The LFSR tap polynomial is **x⁴ + x³ + 1**, numbering stages 1–4
+from bit 0 to bit 3. With this left-shift convention, the forward sequence
+obeys `s[n+4] = s[n+1] XOR s[n]`, whose characteristic polynomial is
+the reciprocal **x⁴ + x + 1**. The all-zero state remains locked at zero;
+reset therefore seeds `0001`.
+
+Counters and LFSR use `ui_in[4]` as enable. The universal shift register uses
+`uio_in[7:6]` as operation, `ui_in[3:0]` for parallel load and `ui_in[0]`
+as serial input. Other input bits are ignored.
+
+For example, select `0x26`, set `ui_in = 0x10`, reset, then apply clock
+pulses. The output counts 1, 2, 3, 4, 5, 0. Set `ui_in = 0` to hold.
+
+### Basic checks
 
 Select `0x01` and try all four combinations of A and B. Select `0x02` and try all
 eight combinations of A, B, and C; each adjacent output pair must agree.

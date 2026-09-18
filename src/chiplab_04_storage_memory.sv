@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 `default_nettype none
+`include "chiplab_experiments.svh"
 
 module chiplab_04_storage_memory (
     input  wire       clk,
@@ -25,6 +26,7 @@ module chiplab_04_storage_memory (
     /* verilator lint_off UNOPTFLAT */
     /* verilator lint_off SYNCASYNCNET */
 
+
     // ------------------------------------------------------------------------
     // Experiment 23: SR latch
     // Is a level-sensitive latch that sets on data[0] and resets on data[1].
@@ -39,7 +41,7 @@ module chiplab_04_storage_memory (
         if (!rst_n)
             sr_q <= 1'b0;
         
-        else if (selection == 6'd23) begin
+        else if (selection == `EXP_SR_LATCH) begin
             case (data[1:0])
                 2'b01: sr_q <= 1'b1;
                 2'b10: sr_q <= 1'b0;
@@ -48,6 +50,7 @@ module chiplab_04_storage_memory (
         end
     end
     assign sr_latch_result = {5'b0, &data[1:0], ~sr_q, sr_q};
+
 
     // ------------------------------------------------------------------------
     // Experiment 24: D latch
@@ -60,10 +63,11 @@ module chiplab_04_storage_memory (
     always_latch begin
         if (!rst_n)
             d_latch_q <= 1'b0;
-        else if ((selection == 6'd24) && data[1])
+        else if ((selection == `EXP_D_LATCH) && data[1])
             d_latch_q <= data[0];
     end
     assign d_latch_result = {7'b0, d_latch_q};
+
 
     // ------------------------------------------------------------------------
     // Experiment 25: D flip-flop
@@ -73,10 +77,11 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             d_ff_q <= 1'b0;
-        else if (selection == 6'd25)
+        else if (selection == `EXP_D_FLIPFLOP)
             d_ff_q <= data[0];
     end
     assign d_flipflop_result = {7'b0, d_ff_q};
+
 
     // ------------------------------------------------------------------------
     // Experiment 28: D latch and D flip-flop
@@ -86,17 +91,18 @@ module chiplab_04_storage_memory (
     always_latch begin
         if (!rst_n)
             compare_latch_q <= 1'b0;
-        else if ((selection == 6'd28) && data[1])
+        else if ((selection == `EXP_LATCH_FLIPFLOP) && data[1])
             compare_latch_q <= data[0];
     end
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             compare_ff_q <= 1'b0;
-        else if (selection == 6'd28)
+        else if (selection == `EXP_LATCH_FLIPFLOP)
             compare_ff_q <= data[0];
     end
     assign latch_ff_result = {6'b0, compare_ff_q, compare_latch_q};
+
 
     // ------------------------------------------------------------------------
     // Experiment 26: T flip-flop
@@ -106,10 +112,11 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             t_q <= 1'b0;
-        else if ((selection == 6'd26) && data[0])
+        else if ((selection == `EXP_T_FLIPFLOP) && data[0])
             t_q <= ~t_q;
     end
     assign t_ff_result = {7'b0, t_q};
+
 
     // ------------------------------------------------------------------------
     // Experiment 27: JK flip-flop
@@ -119,7 +126,7 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             jk_q <= 1'b0;
-        else if (selection == 6'd27) begin
+        else if (selection == `EXP_JK_FLIPFLOP) begin
             case (data[1:0])
                 2'b01: jk_q <= 1'b1;
                 2'b10: jk_q <= 1'b0;
@@ -130,6 +137,7 @@ module chiplab_04_storage_memory (
     end
     assign jk_ff_result = {7'b0, jk_q};
 
+
     // ------------------------------------------------------------------------
     // Experiment 29: Synchronous and asynchronous reset
     // Both flip-flops load data[0]; bits 0 and 1 show sync and async reset.
@@ -138,17 +146,18 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk) begin
         if (!rst_n)
             sync_reset_q <= 1'b0;
-        else if (selection == 6'd29)
+        else if (selection == `EXP_RESET)
             sync_reset_q <= data[0];
     end
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             async_reset_q <= 1'b0;
-        else if (selection == 6'd29)
+        else if (selection == `EXP_RESET)
             async_reset_q <= data[0];
     end
     assign reset_result = {6'b0, async_reset_q, sync_reset_q};
 
+    
     // ------------------------------------------------------------------------
     // Experiment 30: Register with enable
     // Load data[3:0] on a rising edge while data[4] is high.
@@ -157,11 +166,12 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             enable_register <= 4'b0;
-        else if ((selection == 6'd30) && data[4])
+        else if ((selection == `EXP_REGISTER_ENABLE) && data[4])
             enable_register <= data[3:0];
     end
     assign register_enable_result = {4'b0, enable_register};
 
+    
     // ------------------------------------------------------------------------
     // Experiment 31: Register with load, hold, and clear
     // data[5:4] selects hold, load, clear, or load; data[3:0] is the input.
@@ -170,7 +180,7 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             control_register <= 4'b0;
-        else if (selection == 6'd31) begin
+        else if (selection == `EXP_REGISTER_CONTROL) begin
             case (data[5:4])
                 2'b00: control_register <= control_register;
                 2'b01: control_register <= data[3:0];
@@ -181,6 +191,7 @@ module chiplab_04_storage_memory (
     end
     assign register_control_result = {4'b0, control_register};
 
+    
     // ------------------------------------------------------------------------
     // Experiment 32: Small read/write memory
     // data[5:4] is the address, data[3:0] is write data, and data[6] enables write.
@@ -191,12 +202,13 @@ module chiplab_04_storage_memory (
         if (!rst_n) begin
             for (i = 0; i < 4; i = i + 1)
                 memory[i] <= 4'b0;
-        end else if ((selection == 6'd32) && data[6]) begin
+        end else if ((selection == `EXP_MEMORY) && data[6]) begin
             memory[data[5:4]] <= data[3:0];
         end
     end
     assign memory_result = {4'b0, memory[data[5:4]]};
 
+    
     // ------------------------------------------------------------------------
     // Experiment 33: Accumulator
     // data[3:0] is the operand, data[4] enables update, and data[5] clears it.
@@ -205,7 +217,7 @@ module chiplab_04_storage_memory (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             accumulator <= 8'b0;
-        else if (selection == 6'd33) begin
+        else if (selection == `EXP_ACCUMULATOR) begin
             if (data[5])
                 accumulator <= 8'b0;
             else if (data[4])

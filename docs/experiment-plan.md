@@ -98,7 +98,7 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–33 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–42 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Storage experiments use `clk` and `rst_n`. Interfaces for later experiments

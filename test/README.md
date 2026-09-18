@@ -14,6 +14,7 @@ See below to get started or for more information, check the [website](https://ti
 | `test_03_multiplexer.py` through `test_13_rom.py` | One file per section 2 experiment; all 256 input bytes checked |
 | `test_14_half_adder.py` through `test_22_alu.py` | One file per arithmetic experiment |
 | `test_23_sr_latch.py` through `test_33_accumulator.py` | One file per storage experiment |
+| `test_34_shift_register.py` through `test_42_lfsr.py` | Shifting, counting, wraparound, hold, and reset |
 | `test_interface.py` | Selection decoding, unused input bits, and control-input independence |
 
 The experiment tests follow **initialize → apply inputs → wait → check outputs**.
@@ -26,7 +27,7 @@ Combinational tests wait 10 ns for signals to settle. Sequential tests run a
 the same checks to run against RTL and the gate-level netlist.
 
 Use one file per experiment, numbered according to the experiment plan. Add
-future experiments as `test_34_shift_register.py`, etc., and register them in
+future experiments as `test_43_edge_detection.py`, etc., and register them in
 `COCOTB_TEST_MODULES` in the Makefile. Sequential experiments should explicitly
 provide their required clock and reset sequence. RTL files remain organized by
 curriculum block; their numbering is independent of test experiment numbering.
