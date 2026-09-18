@@ -117,3 +117,6 @@ Using Surfer
 ```sh
 surfer tb.fst
 ```
+
+`test_54_fifo.py` and `test_55_stack.py` belong to group 4. They check ordering,
+fill count, full/empty, overflow/underflow, slot reuse, selection, and reset.

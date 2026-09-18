@@ -6,6 +6,7 @@ module chiplab_04_storage_memory (
     input  wire       clk,
     input  wire       rst_n,
     input  wire [5:0] selection,
+    input  wire [1:0] operation,
     input  wire [7:0] data,
     input  wire [7:0] alu_result,
     output wire [3:0] accumulator_value,
@@ -19,7 +20,9 @@ module chiplab_04_storage_memory (
     output wire [7:0] register_enable_result,
     output wire [7:0] register_control_result,
     output wire [7:0] memory_result,
-    output wire [7:0] accumulator_result
+    output wire [7:0] accumulator_result,
+    output wire [7:0] fifo_result,
+    output wire [7:0] stack_result
 );
     // Latches and the reset comparison are intentional experiments.
     /* verilator lint_off COMBDLY */
@@ -226,6 +229,73 @@ module chiplab_04_storage_memory (
     end
     assign accumulator_value = accumulator[3:0];
     assign accumulator_result = accumulator;
+
+    // Shared buffer commands: 00/11 hold, 01 push, 10 pop.
+    wire push = operation == 2'b01;
+    wire pop = operation == 2'b10;
+    wire [3:0] write_data = data[3:0];
+
+
+    // ------------------------------------------------------------------------
+    // Experiment 54: FIFO
+    // Four nibbles, oldest first. Full also supplies bit 2 of the fill count.
+    // ------------------------------------------------------------------------
+    logic [3:0] fifo_memory [0:3];
+    logic [1:0] read_pointer, write_pointer;
+    logic [2:0] fifo_count;
+    wire fifo_empty = fifo_count == 3'd0;
+    wire fifo_full = fifo_count[2];
+    wire [3:0] fifo_front = fifo_empty ? 4'd0 : fifo_memory[read_pointer];
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            read_pointer <= 2'd0;
+            write_pointer <= 2'd0;
+            fifo_count <= 3'd0;
+        end else if (selection == `EXP_FIFO) begin
+            if (push && !fifo_full) begin
+                write_pointer <= write_pointer + 2'd1;
+                fifo_count <= fifo_count + 3'd1;
+            end else if (pop && !fifo_empty) begin
+                read_pointer <= read_pointer + 2'd1;
+                fifo_count <= fifo_count - 3'd1;
+            end
+        end
+    end
+    // Reset clears validity through the count; stored bits need no reset.
+    always_ff @(posedge clk) begin
+        if (rst_n && selection == `EXP_FIFO && push && !fifo_full)
+            fifo_memory[write_pointer] <= write_data;
+    end
+    assign fifo_result = {fifo_empty, fifo_count, fifo_front};
+
+
+    // ------------------------------------------------------------------------
+    // Experiment 55: Stack
+    // Four nibbles, newest first. Push on full and pop on empty do nothing.
+    // ------------------------------------------------------------------------
+    logic [3:0] stack_memory [0:3];
+    logic [2:0] stack_count;
+    wire stack_empty = stack_count == 3'd0;
+    wire stack_full = stack_count[2];
+    wire [1:0] top_address = stack_count[1:0] - 2'd1;
+    wire [3:0] stack_top = stack_empty ? 4'd0 : stack_memory[top_address];
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            stack_count <= 3'd0;
+        else if (selection == `EXP_STACK) begin
+            if (push && !stack_full)
+                stack_count <= stack_count + 3'd1;
+            else if (pop && !stack_empty)
+                stack_count <= stack_count - 3'd1;
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (rst_n && selection == `EXP_STACK && push && !stack_full)
+            stack_memory[stack_count[1:0]] <= write_data;
+    end
+    assign stack_result = {stack_empty, stack_count, stack_top};
 
     wire _unused = &{data[7], 1'b0};
     /* verilator lint_on SYNCASYNCNET */

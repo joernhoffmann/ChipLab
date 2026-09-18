@@ -45,6 +45,8 @@
 `define EXP_REGISTER_CONTROL 6'd31
 `define EXP_MEMORY 6'd32
 `define EXP_ACCUMULATOR 6'd33
+`define EXP_FIFO 6'd54
+`define EXP_STACK 6'd55
 
 // Shift Registers and Counters
 `define EXP_SHIFT_REGISTER 6'd34

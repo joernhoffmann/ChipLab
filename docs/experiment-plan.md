@@ -49,6 +49,11 @@ and finite state machines with datapaths.
 32. Small read/write memory
 33. Accumulator (with ALU, result register, and feedback)
 
+Additional storage experiments (existing numbers retained):
+
+- **54. FIFO:** 4 × 4 bits, oldest entry first.
+- **55. Stack:** 4 × 4 bits, newest entry first.
+
 ## 5. Shift Registers and Counters
 
 34. Shift register
@@ -92,6 +97,7 @@ synthesis and place-and-route.
 | Sequential multiplier | 4 × 4 bits, 8-bit result |
 | Registers and counters | 4 or 8 bits |
 | Read/write memory | 4 words × 4 bits |
+| FIFO and stack | 4 entries × 4 bits each |
 
 Related experiments may share arithmetic units, display decoders, and registers.
 Separate circuits are required where comparing their behavior is part of the
@@ -99,7 +105,7 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–53 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–55 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Storage, timing, and FSM experiments use `clk` and `rst_n`.

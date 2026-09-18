@@ -98,7 +98,10 @@ module tt_um_chiplab (
     wire [7:0] register_control_result;
     wire [7:0] memory_result;
     wire [7:0] accumulator_result;
+    wire [7:0] fifo_result;
+    wire [7:0] stack_result;
     chiplab_04_storage_memory storage_memory (
+        .operation(uio_in[7:6]),
         .clk(clk),
         .rst_n(rst_n),
         .selection(uio_in[5:0]),
@@ -115,7 +118,9 @@ module tt_um_chiplab (
         .register_enable_result(register_enable_result),
         .register_control_result(register_control_result),
         .memory_result(memory_result),
-        .accumulator_result(accumulator_result)
+        .accumulator_result(accumulator_result),
+        .fifo_result(fifo_result),
+        .stack_result(stack_result)
     );
 
     // --------------------------------------------------------------------
@@ -232,6 +237,8 @@ module tt_um_chiplab (
             `EXP_REGISTER_CONTROL: uo_out = register_control_result;
             `EXP_MEMORY: uo_out = memory_result;
             `EXP_ACCUMULATOR: uo_out = accumulator_result;
+            `EXP_FIFO: uo_out = fifo_result;
+            `EXP_STACK: uo_out = stack_result;
             `EXP_SHIFT_REGISTER: uo_out = shift_register_result;
             `EXP_UNIVERSAL_SHIFT_REGISTER: uo_out = universal_shift_register_result;
             `EXP_BINARY_COUNTER: uo_out = binary_counter_result;
