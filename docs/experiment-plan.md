@@ -37,47 +37,48 @@ and finite state machines with datapaths.
 
 ## 4. Storage Elements and Memory
 
-23. Accumulator (with ALU, result register, and feedback)
-24. SR latch
-25. D latch
-26. D flip-flop - comparison with the D latch
-27. T flip-flop
-28. JK flip-flop
+23. SR latch
+24. D latch
+25. D flip-flop
+26. T flip-flop
+27. JK flip-flop
+28. D flip-flop - comparison with the D latch
 29. Synchronous and asynchronous reset
 30. Register with enable
 31. Register with parallel load, hold, and clear
 32. Small read/write memory
+33. Accumulator (with ALU, result register, and feedback)
 
 ## 5. Shift Registers and Counters
 
-33. Shift register
-34. Universal shift register (parallel load and left/right shift)
-35. Binary counter
-36. Up/down counter
-37. Modulo counter
-38. BCD counter
-39. Ring counter
-40. Johnson counter
-41. Linear-feedback shift register (LFSR)
+34. Shift register
+35. Universal shift register (parallel load and left/right shift)
+36. Binary counter
+37. Up/down counter
+38. Modulo counter
+39. BCD counter
+40. Ring counter
+41. Johnson counter
+42. Linear-feedback shift register (LFSR)
 
 ## 6. Input Synchronization and Timing
 
-42. Edge detection and pulse generation
-43. Synchronization of asynchronous inputs
-44. Push-button debouncing
-45. Clock division using clock enable
-46. Pulse-width modulation (PWM)
+43. Edge detection and pulse generation
+44. Synchronization of asynchronous inputs
+45. Push-button debouncing
+46. Clock division using clock enable
+47. Pulse-width modulation (PWM)
 
 ## 7. Finite State Machines
 
-47. Moore sequence detector
-48. Mealy sequence detector
-49. Traffic light controller
-50. Handshake controller
+48. Moore sequence detector
+49. Mealy sequence detector
+50. Traffic light controller
+51. Handshake controller
 
 ## 8. FSM-Controlled Datapaths
 
-51. Sequential multiplier (shift-and-add datapath controlled by an FSM)
+52. Sequential multiplier (shift-and-add datapath controlled by an FSM)
 
 ## Design Targets
 
@@ -97,10 +98,11 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–22 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–33 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
-Interfaces for later experiments remain to be specified.
+Storage experiments use `clk` and `rst_n`. Interfaces for later experiments
+remain to be specified.
 
 ## Implementation Considerations
 

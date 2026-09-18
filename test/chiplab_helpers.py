@@ -5,7 +5,9 @@ Only public TT ports are accessed, so the tests also work with a gate-level
 netlist. The settling interval is a functional simulation delay, not a measured
 propagation delay or a timing specification.
 """
-from cocotb.triggers import Timer
+import cocotb
+from cocotb.clock import Clock
+from cocotb.triggers import RisingEdge, Timer
 
 BASIC_GATES = 0x01
 BOOLEAN_IDENTITIES = 0x02
@@ -29,6 +31,17 @@ SIGNED_COMPARATOR = 0x13
 SHIFTS = 0x14
 ROTATION = 0x15
 ALU = 0x16
+SR_LATCH = 0x17
+D_LATCH = 0x18
+D_FLIPFLOP = 0x19
+T_FLIPFLOP = 0x1A
+JK_FLIPFLOP = 0x1B
+LATCH_FLIPFLOP = 0x1C
+RESET = 0x1D
+REGISTER_ENABLE = 0x1E
+REGISTER_CONTROL = 0x1F
+MEMORY = 0x20
+ACCUMULATOR = 0x21
 SETTLE_NS = 10
 
 
@@ -43,6 +56,24 @@ def initialize(dut):
     dut.rst_n.value = 1
     dut.ui_in.value = 0
     dut.uio_in.value = 0
+
+
+async def start_and_reset(dut):
+    """Start the 50 MHz test clock and apply an asynchronous reset."""
+    initialize(dut)
+    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    dut.rst_n.value = 0
+    await Timer(2, unit="ns")
+    dut.rst_n.value = 1
+
+
+async def clock_input(dut, selection, inputs, operation=0):
+    """Apply inputs, wait for a rising edge, and return the output."""
+    dut.uio_in.value = selection | (operation << 6)
+    dut.ui_in.value = inputs
+    await RisingEdge(dut.clk)
+    await Timer(1, unit="ns")
+    return int(dut.uo_out.value)
 
 
 async def sample(dut, selection, inputs, operation=0):

@@ -93,11 +93,68 @@ module chiplab_adder_4bit (
 endmodule
 
 // ------------------------------------------------------------------------
+// 4-bit ALU
+// Performs addition, subtraction, AND, and OR operations on two 4-bit numbers a and b.
+// The operation is selected by a 2-bit signal.
+// ------------------------------------------------------------------------
+module chiplab_alu_4bit (
+    input  wire [3:0] a,
+    input  wire [3:0] b,
+    input  wire [1:0] operation,
+    output logic [7:0] result
+);
+    wire [3:0] adder_a = a;
+    wire [3:0] adder_b = operation == 2'b01 ? ~b : b;
+    wire [3:0] arithmetic_value;
+    wire arithmetic_carry, arithmetic_overflow;
+
+    chiplab_adder_4bit alu_adder (
+        .a          (adder_a),
+        .b          (adder_b),
+        .carry_in   (operation == 2'b01),   // Carry for substraction
+        .sum        (arithmetic_value),
+        .carry_out  (arithmetic_carry),
+        .overflow   (arithmetic_overflow)
+    );
+
+    logic [3:0] value;
+    logic carry, overflow;
+    always_comb begin
+        carry = 1'b0;
+        overflow = 1'b0;
+        case (operation)
+            
+            // Addition
+            2'b00: begin
+                value = arithmetic_value;
+                carry = arithmetic_carry;
+                overflow = arithmetic_overflow;
+            end
+            
+            // Substraction
+            2'b01: begin
+                value = arithmetic_value;
+                carry = arithmetic_carry;
+                overflow = arithmetic_overflow;
+            end
+            // AND
+            2'b10: value = a & b;
+            
+            // OR otherwsie
+            default: value = a | b;
+        endcase
+        result = {value[3], value == 4'b0, overflow, carry, value};
+    end
+endmodule
+
+// ------------------------------------------------------------------------
 // Main module for experiments group 3
 // ------------------------------------------------------------------------
 module chiplab_03_arithmetic_data (
     input  wire [7:0] data,
     input  wire [1:0] operation,
+    input  wire       accumulator_selected,
+    input  wire [3:0] accumulator_value,
     output wire [7:0] half_adder_result,
     output wire [7:0] full_adder_result,
     output wire [7:0] adder_result,
@@ -106,7 +163,7 @@ module chiplab_03_arithmetic_data (
     output wire [7:0] signed_compare_result,
     output logic [7:0] shift_result,
     output wire [7:0] rotate_result,
-    output logic [7:0] alu_result
+    output wire [7:0] alu_result
 );
     wire [3:0] a = data[3:0];
     wire [3:0] b = data[7:4];
@@ -227,55 +284,15 @@ module chiplab_03_arithmetic_data (
 
     // ------------------------------------------------------------------------
     // Experiment 22: ALU
-    // Apply add, subtract, AND, or OR to a and b using operation[1:0].
+    // Experiment 33 reuses this ALU with the accumulator as operand A.
     // ------------------------------------------------------------------------
-    wire [3:0] alu_a = a;                               // Operand a: direct from input
-    wire [3:0] alu_b = operation == 2'b01 ? ~b : b;     // Operand b: inverted for subtraction
-    wire [3:0] alu_sum;
-    wire alu_carry, alu_overflow;
-    
-    // ALU result and flags
-    logic [3:0] alu_value;
-    logic alu_flag_carry, alu_flag_overflow;
-    
-    // Instantiate the 4-bit adder for the ALU operations
-    chiplab_adder_4bit alu_adder (
-        .a          (alu_a), 
-        .b          (alu_b), 
-        .carry_in   (operation == 2'b01), 
-        .sum        (alu_sum),
-        .carry_out  (alu_carry), 
-        .overflow   (alu_overflow)
+    wire [3:0] alu_a = accumulator_selected ? accumulator_value : a;
+    wire [3:0] alu_b = accumulator_selected ? data[3:0] : b;
+    chiplab_alu_4bit shared_alu (
+        .a(alu_a),
+        .b(alu_b),
+        .operation(operation),
+        .result(alu_result)
     );
 
-    // Main ALU logic to select the operation and set flags
-    always_comb begin
-        alu_flag_carry = 1'b0;
-        alu_flag_overflow = 1'b0;
-        
-        case (operation)
-            // Add 
-            2'b00: begin
-                alu_value = alu_sum;
-                alu_flag_carry = alu_carry;
-                alu_flag_overflow = alu_overflow;
-            end
-
-            // Subtract
-            2'b01: begin
-                alu_value = alu_sum;
-                alu_flag_carry = alu_carry;
-                alu_flag_overflow = alu_overflow;
-            end
-
-            // AND
-            2'b10: alu_value = a & b;
-
-            // OR
-            default: alu_value = a | b;
-        endcase
-
-        // Output: [7] = sign bit, [6] = zero flag, [5] = overflow flag, [4] = carry flag, [3:0] = result
-        alu_result = {alu_value[3], alu_value == 4'b0, alu_flag_overflow, alu_flag_carry, alu_value[3:0]};
-    end
 endmodule

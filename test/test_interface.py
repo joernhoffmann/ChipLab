@@ -4,25 +4,25 @@ import cocotb
 
 from chiplab_helpers import initialize, sample
 
-IMPLEMENTED = range(1, 23)
+COMBINATIONAL = range(1, 23)
 
 
 @cocotb.test()
 async def test_selection_and_controls(dut):
-    """Unassigned codes return zero; clock, reset, and enable have no effect.
+    """Unassigned codes return zero; controls do not change combinational logic.
 
     Per-experiment tests check the actual output values for every input byte.
     Here a settled result is the reference for each control combination.
     """
     initialize(dut)
-    for selection in range(64):
+    for selection in list(COMBINATIONAL) + list(range(34, 64)):
         for operation in range(4):
             for inputs in (0, 1, 7, 0x35, 0x80, 0xB4, 0xFF):
                 dut.clk.value = 0
                 dut.rst_n.value = 1
                 dut.ena.value = 1
                 reference = await sample(dut, selection, inputs, operation)
-                if selection not in IMPLEMENTED:
+                if selection not in COMBINATIONAL:
                     assert reference == 0
                 for controls in range(8):
                     dut.clk.value = controls & 1
@@ -36,7 +36,7 @@ async def test_selection_and_controls(dut):
 async def test_switching_experiments(dut):
     """Switch to zero and back to catch retained outputs or hidden state."""
     initialize(dut)
-    for selection in IMPLEMENTED:
+    for selection in COMBINATIONAL:
         for operation in range(4):
             for inputs in (0, 1, 0x55, 0xFF):
                 reference = await sample(dut, selection, inputs, operation)

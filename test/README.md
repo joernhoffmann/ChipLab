@@ -12,6 +12,8 @@ See below to get started or for more information, check the [website](https://ti
 | `test_01_basic_gates.py` | Experiment 1: all basic gate truth tables |
 | `test_02_boolean_identities.py` | Experiment 2: separate tests for De Morgan’s laws, distributivity, and absorption |
 | `test_03_multiplexer.py` through `test_13_rom.py` | One file per section 2 experiment; all 256 input bytes checked |
+| `test_14_half_adder.py` through `test_22_alu.py` | One file per arithmetic experiment |
+| `test_23_sr_latch.py` through `test_33_accumulator.py` | One file per storage experiment |
 | `test_interface.py` | Selection decoding, unused input bits, and control-input independence |
 
 The experiment tests follow **initialize → apply inputs → wait → check outputs**.
@@ -19,13 +21,12 @@ Truth-table columns name the expected functions rather than hiding them in packe
 hexadecimal values. Both sides of each identity are checked against their expected
 value; comparing the two sides alone would miss identical errors on both outputs.
 
-These experiments are combinational, so no running clock or reset sequence is
-needed. The 10 ns wait lets simulation events settle; it is not a measurement of
-silicon propagation delay. All tests access only public ports, allowing the same
-checks to run against RTL and the gate-level netlist.
+Combinational tests wait 10 ns for signals to settle. Sequential tests run a
+50 MHz clock and apply reset first. All tests access only public ports, allowing
+the same checks to run against RTL and the gate-level netlist.
 
 Use one file per experiment, numbered according to the experiment plan. Add
-future experiments as `test_23_accumulator.py`, etc., and register them in
+future experiments as `test_34_shift_register.py`, etc., and register them in
 `COCOTB_TEST_MODULES` in the Makefile. Sequential experiments should explicitly
 provide their required clock and reset sequence. RTL files remain organized by
 curriculum block; their numbering is independent of test experiment numbering.

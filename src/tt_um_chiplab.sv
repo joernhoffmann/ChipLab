@@ -65,10 +65,13 @@ module tt_um_chiplab (
     wire [7:0] signed_compare_result;
     wire [7:0] shift_result;
     wire [7:0] rotate_result;
+    wire [3:0] accumulator_value;
     wire [7:0] alu_result;
     chiplab_03_arithmetic_data arithmetic_data (
         .data(ui_in),
         .operation(uio_in[7:6]),
+        .accumulator_selected(uio_in[5:0] == 6'd33),
+        .accumulator_value(accumulator_value),
         .half_adder_result(half_adder_result),
         .full_adder_result(full_adder_result),
         .adder_result(adder_result),
@@ -78,6 +81,40 @@ module tt_um_chiplab (
         .shift_result(shift_result),
         .rotate_result(rotate_result),
         .alu_result(alu_result)
+    );
+
+    // --------------------------------------------------------------------
+    // Group 4: Storage Elements and Memory
+    // --------------------------------------------------------------------
+    wire [7:0] sr_latch_result;
+    wire [7:0] d_latch_result;
+    wire [7:0] d_flipflop_result;
+    wire [7:0] latch_ff_result;
+    wire [7:0] t_ff_result;
+    wire [7:0] jk_ff_result;
+    wire [7:0] reset_result;
+    wire [7:0] register_enable_result;
+    wire [7:0] register_control_result;
+    wire [7:0] memory_result;
+    wire [7:0] accumulator_result;
+    chiplab_04_storage_memory storage_memory (
+        .clk(clk),
+        .rst_n(rst_n),
+        .selection(uio_in[5:0]),
+        .data(ui_in),
+        .alu_result(alu_result),
+        .accumulator_value(accumulator_value),
+        .sr_latch_result(sr_latch_result),
+        .d_latch_result(d_latch_result),
+        .d_flipflop_result(d_flipflop_result),
+        .latch_ff_result(latch_ff_result),
+        .t_ff_result(t_ff_result),
+        .jk_ff_result(jk_ff_result),
+        .reset_result(reset_result),
+        .register_enable_result(register_enable_result),
+        .register_control_result(register_control_result),
+        .memory_result(memory_result),
+        .accumulator_result(accumulator_result)
     );
 
     // ------------------------------------------------------------------------
@@ -107,6 +144,17 @@ module tt_um_chiplab (
             6'h14: uo_out = shift_result;
             6'h15: uo_out = rotate_result;
             6'h16: uo_out = alu_result;
+            6'h17: uo_out = sr_latch_result;
+            6'h18: uo_out = d_latch_result;
+            6'h19: uo_out = d_flipflop_result;
+            6'h1A: uo_out = t_ff_result;
+            6'h1B: uo_out = jk_ff_result;
+            6'h1C: uo_out = latch_ff_result;
+            6'h1D: uo_out = reset_result;
+            6'h1E: uo_out = register_enable_result;
+            6'h1F: uo_out = register_control_result;
+            6'h20: uo_out = memory_result;
+            6'h21: uo_out = accumulator_result;
             default: uo_out = 8'b0;
         endcase
     end
@@ -115,6 +163,6 @@ module tt_um_chiplab (
     assign uio_out = 8'b0;
     assign uio_oe = 8'b0;
 
-    // Currently, combinational experiments do not use clock, reset, or enable.
-    wire _unused = &{ena, clk, rst_n, 1'b0};
+    // Tiny Tapeout enable does not change an experiment's internal behavior.
+    wire _unused = &{ena, 1'b0};
 endmodule

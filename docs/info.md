@@ -1,7 +1,7 @@
 # ChipLab
 
 ChipLab is an educational digital logic chip for Tiny Tapeout IHP26b.
-Sections 1–3 are implemented: logic, coding, arithmetic, and data operations.
+Sections 1–4 are implemented: logic, coding, arithmetic, storage, and memory.
 
 ## How it works
 
@@ -35,11 +35,22 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x14` | Shifts |
 | `0x15` | Rotation |
 | `0x16` | ALU |
+| `0x17` | SR latch |
+| `0x18` | D latch |
+| `0x19` | D flip-flop |
+| `0x1A` | T flip-flop |
+| `0x1B` | JK flip-flop |
+| `0x1C` | D latch and D flip-flop |
+| `0x1D` | Synchronous and asynchronous reset |
+| `0x1E` | Register with enable |
+| `0x1F` | Register with load, hold, and clear |
+| `0x20` | 4 × 4-bit read/write memory |
+| `0x21` | Accumulator |
 | All other codes | All outputs zero |
 
-All implemented experiments are combinational: clock, reset, and enable do not change their
-results. Changing the selection immediately selects the corresponding outputs;
-there is no stored state. Allow signals to settle before sampling.
+Experiments 1–22 are combinational. Experiments 23–33 store state and use
+`clk` or latch controls. `rst_n` clears their state. Allow signals to settle
+before sampling.
 
 | Output bit | Basic gates (`0x01`) | Boolean identities (`0x02`) |
 |---|---|---|
@@ -123,6 +134,26 @@ For shifts, operation 0 is left, 1 is logical right, and 2 is arithmetic right.
 For rotation, operation bit 0 selects left or right. ALU operations are add,
 subtract, AND, and OR for operation values 0–3.
 
+## Storage elements and memory
+
+| Code | Input | Output |
+|---|---|---|
+| `0x17` | Set `[0]`, reset `[1]` | Q `[0]`, /Q `[1]`, invalid `[2]` |
+| `0x18` | D `[0]`, gate `[1]` | Q `[0]` |
+| `0x19` | D `[0]` | Q `[0]` |
+| `0x1A` | Toggle `[0]` | Q `[0]` |
+| `0x1B` | J `[0]`, K `[1]` | Q `[0]` |
+| `0x1C` | D `[0]`, latch gate `[1]` | Latch Q `[0]`, flip-flop Q `[1]` |
+| `0x1D` | D `[0]` | Synchronous Q `[0]`, asynchronous Q `[1]` |
+| `0x1E` | Data `[3:0]`, enable `[4]` | Register `[3:0]` |
+| `0x1F` | Data `[3:0]`, control `[5:4]` | Register `[3:0]` |
+| `0x20` | Data `[3:0]`, address `[5:4]`, write `[6]` | Read data `[3:0]` |
+| `0x21` | Operand `[3:0]`, enable `[4]`, clear `[5]` | ALU result and flags |
+
+The control values for `0x1F` are hold, load, clear, and load. The accumulator
+feeds its low four bits back into the same ALU used by experiment 22.
+`uio_in[7:6]` selects add, subtract, AND, or OR.
+
 ## How to test
 
 Select `0x01` and try all four combinations of A and B. Select `0x02` and try all
@@ -131,9 +162,9 @@ For `0x08`, test zero, a single set bit, and multiple set bits.
 For example, A = 1, B = 0, C = 0 gives `uo_out = 0x5A` for `0x01`
 and `uo_out = 0xC3` for `0x02`.
 
-Each experiment has its own cocotb test file. Tests cover all 256 input bytes,
-including invalid inputs and unused bits. Shared tests check all selection codes,
-experiment switching, and independence from clock, reset, and enable.
+Each experiment has its own cocotb test file. Combinational tests cover all 256
+input bytes where useful. Shared tests check selection codes and experiment
+switching. Sequential tests provide their own clock and reset sequence.
 See [Local Simulation](local-simulation.md) for setup and commands, and
 [Experiment Plan](experiment-plan.md) for the full curriculum.
 
