@@ -200,6 +200,15 @@ module tt_um_chiplab (
     );
 
     // ------------------------------------------------------------------------
+    // Group 9: Sound
+    // ------------------------------------------------------------------------
+    wire [7:0] psg_result;
+    chiplab_09_sound sound (
+        .clk(clk), .rst_n(rst_n), .selection(uio_in[5:0]),
+        .operation(uio_in[7:6]), .data(ui_in), .psg_result(psg_result)
+    );
+
+    // ------------------------------------------------------------------------
     // Main experiment selection
     // ------------------------------------------------------------------------
     always_comb begin
@@ -259,6 +268,7 @@ module tt_um_chiplab (
             `EXP_HANDSHAKE: uo_out = handshake_result;
             `EXP_PARKING_COUNTER: uo_out = parking_result;
             `EXP_MULTIPLIER: uo_out = multiplier_result;
+            `EXP_PSG: uo_out = psg_result;
             default: uo_out = 8'b0;
         endcase
     end

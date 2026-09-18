@@ -76,4 +76,7 @@
 // FSM-Controlled Datapaths
 `define EXP_MULTIPLIER 6'd53
 
+// Sound
+`define EXP_PSG 6'd56
+
 `endif

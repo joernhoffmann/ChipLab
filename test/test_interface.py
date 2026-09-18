@@ -14,7 +14,7 @@ async def test_selection_and_controls(dut):
     Here a settled result is the reference for each control combination.
     """
     initialize(dut)
-    for selection in [0] + list(COMBINATIONAL) + list(range(56, 64)):
+    for selection in [0] + list(COMBINATIONAL) + list(range(57, 64)):
         for operation in range(4):
             for inputs in (0, 1, 7, 0x35, 0x80, 0xB4, 0xFF):
                 dut.clk.value = 0

@@ -86,6 +86,10 @@ Additional storage experiments (existing numbers retained):
 
 53. Sequential multiplier (shift-and-add datapath controlled by an FSM)
 
+## 9. Sound
+
+56. Programmable sound generator (register bank, tone/noise, decay envelope, PWM)
+
 ## Design Targets
 
 The target footprint is two tiles (`1x2`). Area and timing must be confirmed by
@@ -105,7 +109,7 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–55 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–56 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Storage, timing, and FSM experiments use `clk` and `rst_n`.

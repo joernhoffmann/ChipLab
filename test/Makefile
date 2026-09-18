@@ -9,7 +9,7 @@ SRC_DIR = $(CURDIR)/../src
 CUSTOM_COMPILE_DEPS += $(SRC_DIR)/chiplab_experiments.svh
 PROJECT_SOURCES = tt_um_chiplab.sv chiplab_01_basic_boolean.sv chiplab_02_selection_coding.sv chiplab_03_arithmetic_data.sv chiplab_04_storage_memory.sv chiplab_05_shift_counters.sv
 
-PROJECT_SOURCES += chiplab_06_input_timing.sv chiplab_07_state_machines.sv chiplab_08_fsm_datapaths.sv
+PROJECT_SOURCES += chiplab_06_input_timing.sv chiplab_07_state_machines.sv chiplab_08_fsm_datapaths.sv chiplab_09_sound.sv
 
 ifneq ($(GATES),yes)
 
@@ -49,7 +49,8 @@ TEST_GRP05_COUNT = test_34_shift_register,test_35_universal_shift_register,test_
 TEST_GRP06_TIMING = test_43_edge_detection,test_44_synchronizer,test_45_debouncer,test_46_clock_enable,test_47_pwm
 TEST_GRP07_FSM = test_48_moore_control,test_49_mealy_control,test_50_traffic_light,test_51_handshake,test_52_parking_counter
 TEST_GRP08_DATAPATH = test_53_multiplier
-COCOTB_TEST_MODULES = $(TEST_GRP01_GATES),$(TEST_GRP02_SEL),$(TEST_GRP03_ARITH),$(TEST_GRP04_STORE),$(TEST_GRP05_COUNT),$(TEST_GRP06_TIMING),$(TEST_GRP07_FSM),$(TEST_GRP08_DATAPATH),$(TEST_OTHER)
+TEST_GRP09_SOUND = test_56_psg
+COCOTB_TEST_MODULES = $(TEST_GRP01_GATES),$(TEST_GRP02_SEL),$(TEST_GRP03_ARITH),$(TEST_GRP04_STORE),$(TEST_GRP05_COUNT),$(TEST_GRP06_TIMING),$(TEST_GRP07_FSM),$(TEST_GRP08_DATAPATH),$(TEST_GRP09_SOUND),$(TEST_OTHER)
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
