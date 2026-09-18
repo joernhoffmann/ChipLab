@@ -266,16 +266,16 @@ module chiplab_03_arithmetic_data (
     logic [3:0] rotated_value;
     wire shift_dir = operation[0];
     wire [1:0] shift_amount = data[5:4];
-    
+
     always_comb begin
-        // Rotation by re arranging bits based on the operation and shift amount
+        // Rearrange the bits for the selected direction and amount.
         case ({shift_dir, shift_amount})
             // Left rotation
             3'b000: rotated_value = a;
             3'b001: rotated_value = {a[2:0], a[3]};
             3'b010: rotated_value = {a[1:0], a[3:2]};
             3'b011: rotated_value = {a[0], a[3:1]};
-            
+
             // Right rotation
             3'b100: rotated_value = a;
             3'b101: rotated_value = {a[0], a[3:1]};
