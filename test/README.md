@@ -15,6 +15,9 @@ See below to get started or for more information, check the [website](https://ti
 | `test_14_half_adder.py` through `test_22_alu.py` | One file per arithmetic experiment |
 | `test_23_sr_latch.py` through `test_33_accumulator.py` | One file per storage experiment |
 | `test_34_shift_register.py` through `test_42_lfsr.py` | Shifting, counting, wraparound, hold, and reset |
+| `test_43_edge_detection.py` through `test_47_pwm.py` | Pulses, synchronization, bounce rejection, division, and duty cycles |
+| `test_48_moore_control.py` through `test_52_parking_counter.py` | States, Moore/Mealy outputs, enable, handshakes, and parking counts |
+| `test_53_multiplier.py` | All 256 operand pairs, latency, pause, restart, and reset |
 | `test_interface.py` | Selection decoding, unused input bits, and control-input independence |
 
 The experiment tests follow **initialize → apply inputs → wait → check outputs**.
@@ -22,12 +25,14 @@ Truth-table columns name the expected functions rather than hiding them in packe
 hexadecimal values. Both sides of each identity are checked against their expected
 value; comparing the two sides alone would miss identical errors on both outputs.
 
-Combinational tests wait 10 ns for signals to settle. Sequential tests run a
-50 MHz clock and apply reset first. All tests access only public ports, allowing
+Combinational tests wait 10 ns for signals to settle. Sequential tests apply reset,
+then use a 50 MHz clock or explicit edges with 10 ns settling intervals.
+The explicit edges allow checking Mealy outputs before the next edge.
+All tests access only public ports, allowing
 the same checks to run against RTL and the gate-level netlist.
 
 Use one file per experiment, numbered according to the experiment plan. Add
-future experiments as `test_43_edge_detection.py`, etc., and register them in
+new experiments as `test_<number>_<name>.py` and register them in
 `COCOTB_TEST_MODULES` in the Makefile. Sequential experiments should explicitly
 provide their required clock and reset sequence. RTL files remain organized by
 curriculum block; their numbering is independent of test experiment numbering.

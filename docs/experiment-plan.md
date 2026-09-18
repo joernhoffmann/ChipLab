@@ -71,14 +71,15 @@ and finite state machines with datapaths.
 
 ## 7. Finite State Machines
 
-48. Moore sequence detector
-49. Mealy sequence detector
+48. Moore release control (IDLE / ACTIVE)
+49. Mealy release control (IDLE / ACTIVE, with request)
 50. Traffic light controller
 51. Handshake controller
+52. Parking lot occupancy counter (two sensors, direction detection)
 
 ## 8. FSM-Controlled Datapaths
 
-52. Sequential multiplier (shift-and-add datapath controlled by an FSM)
+53. Sequential multiplier (shift-and-add datapath controlled by an FSM)
 
 ## Design Targets
 
@@ -98,11 +99,10 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–42 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–53 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
-Storage experiments use `clk` and `rst_n`. Interfaces for later experiments
-remain to be specified.
+Storage, timing, and FSM experiments use `clk` and `rst_n`.
 
 ## Implementation Considerations
 

@@ -157,7 +157,7 @@ module chiplab_04_storage_memory (
     end
     assign reset_result = {6'b0, async_reset_q, sync_reset_q};
 
-    
+
     // ------------------------------------------------------------------------
     // Experiment 30: Register with enable
     // Load data[3:0] on a rising edge while data[4] is high.
@@ -171,7 +171,7 @@ module chiplab_04_storage_memory (
     end
     assign register_enable_result = {4'b0, enable_register};
 
-    
+
     // ------------------------------------------------------------------------
     // Experiment 31: Register with load, hold, and clear
     // data[5:4] selects hold, load, clear, or load; data[3:0] is the input.
@@ -191,7 +191,7 @@ module chiplab_04_storage_memory (
     end
     assign register_control_result = {4'b0, control_register};
 
-    
+
     // ------------------------------------------------------------------------
     // Experiment 32: Small read/write memory
     // data[5:4] is the address, data[3:0] is write data, and data[6] enables write.
@@ -208,7 +208,7 @@ module chiplab_04_storage_memory (
     end
     assign memory_result = {4'b0, memory[data[5:4]]};
 
-    
+
     // ------------------------------------------------------------------------
     // Experiment 33: Accumulator
     // data[3:0] is the operand, data[4] enables update, and data[5] clears it.

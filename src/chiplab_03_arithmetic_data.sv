@@ -171,6 +171,7 @@ module chiplab_03_arithmetic_data (
     wire [3:0] a = data[3:0];
     wire [3:0] b = data[7:4];
 
+
     // ------------------------------------------------------------------------
     // Experiment 14: Half adder
     // Add data[0] and data[1]; return sum in bit 0 and carry in bit 1.
@@ -183,6 +184,7 @@ module chiplab_03_arithmetic_data (
         .carry      (half_carry)        // Carry output of the half adder
     );
     assign half_adder_result = {6'b0, half_carry, half_sum};
+
 
     // ------------------------------------------------------------------------
     // Experiment 15: Full adder
@@ -197,6 +199,7 @@ module chiplab_03_arithmetic_data (
         .carry_out  (full_carry)        // Carry output of the full adder
     );
     assign full_adder_result = {6'b0, full_carry, full_sum};
+
 
     // ------------------------------------------------------------------------
     // Experiment 16: 4-bit adder
@@ -214,6 +217,7 @@ module chiplab_03_arithmetic_data (
     );
     assign adder_result = {2'b0, add_overflow, add_carry, add_sum};
 
+
     // ------------------------------------------------------------------------
     // Experiment 17: 4-bit subtractor
     // Calculate a-b as a+(NOT b)+1 using the same 4-bit adder.
@@ -230,11 +234,13 @@ module chiplab_03_arithmetic_data (
     );
     assign subtractor_result = {2'b0, subtract_overflow, no_borrow, difference};
 
+
     // ------------------------------------------------------------------------
     // Experiment 18: Unsigned comparator
     // Compare a and b; bits 0, 1, and 2 mean less, equal, and greater.
     // ------------------------------------------------------------------------
     assign unsigned_compare_result = {5'b0, a > b, a == b, a < b};
+
 
     // ------------------------------------------------------------------------
     // Experiment 19: Signed comparator
@@ -245,6 +251,7 @@ module chiplab_03_arithmetic_data (
     assign signed_compare_result = {
         5'b0, signed_a > signed_b, signed_a == signed_b, signed_a < signed_b
     };
+
 
     // ------------------------------------------------------------------------
     // Experiment 20: Shifts
@@ -258,6 +265,7 @@ module chiplab_03_arithmetic_data (
             default: shift_result = 8'b0;
         endcase
     end
+
 
     // ------------------------------------------------------------------------
     // Experiment 21: Rotation
@@ -284,6 +292,7 @@ module chiplab_03_arithmetic_data (
         endcase
     end
     assign rotate_result = {4'b0, rotated_value};
+
 
     // ------------------------------------------------------------------------
     // Experiment 22: ALU

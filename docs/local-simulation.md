@@ -73,11 +73,11 @@ not need to be recreated when adding the matching system runtime library.
 List RTL files in both `info.yaml` (`source_files`) and `test/Makefile`
 (`PROJECT_SOURCES`). The top module in `info.yaml` must match the module instantiated
 by `test/tb.v`. Each experiment has its own test file: `test/test_01_basic_gates.py`,
-`test/test_02_boolean_identities.py`, through `test/test_13_rom.py`. Shared interface checks are in
+`test/test_02_boolean_identities.py`, through `test/test_53_multiplier.py`. Shared interface checks are in
 `test/test_interface.py`. See [the test guide](../test/README.md) for individual
 test commands and the test structure.
 
-The current RTL implements sections 1–5 in SystemVerilog.
+The current RTL implements sections 1–8 in SystemVerilog.
 See [the project description](info.md) for selection codes, pin assignments, and
 output functions. The cocotb tests check truth tables, selection decoding, and
 control-input independence.

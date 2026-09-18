@@ -77,6 +77,7 @@ module chiplab_05_shift_counters (
     end
     assign universal_shift_register_result = {4'b0, universal_shift_register};
 
+
     // ------------------------------------------------------------------------
     // Experiment 36: Binary counter
     // Count 0 through 15 while data[4] is high.
@@ -90,6 +91,7 @@ module chiplab_05_shift_counters (
         end
     end
     assign binary_counter_result = {4'b0, binary_counter};
+
 
     // ------------------------------------------------------------------------
     // Experiment 37: Up/down counter
@@ -105,6 +107,7 @@ module chiplab_05_shift_counters (
     end
     assign up_down_counter_result = {4'b0, up_down_counter};
 
+
     // ------------------------------------------------------------------------
     // Experiment 38: Modulo-6 counter
     // Count 0 through 5, then wrap to 0; data[4] enables counting.
@@ -118,6 +121,7 @@ module chiplab_05_shift_counters (
         end
     end
     assign modulo_counter_result = {4'b0, modulo_counter};
+
 
     // ------------------------------------------------------------------------
     // Experiment 39: BCD counter
@@ -133,6 +137,7 @@ module chiplab_05_shift_counters (
     end
     assign bcd_counter_result = {4'b0, bcd_counter};
 
+
     // ------------------------------------------------------------------------
     // Experiment 40: Ring counter
     // Rotate one set bit; reset seeds 0001 and data[4] enables rotation.
@@ -147,6 +152,7 @@ module chiplab_05_shift_counters (
     end
     assign ring_counter_result = {4'b0, ring_counter};
 
+
     // ------------------------------------------------------------------------
     // Experiment 41: Johnson counter
     // Feed the inverted high bit back into bit 0; data[4] enables shifting.
@@ -160,6 +166,7 @@ module chiplab_05_shift_counters (
         end
     end
     assign johnson_counter_result = {4'b0, johnson_counter};
+
 
     // ------------------------------------------------------------------------
     // Experiment 42: LFSR

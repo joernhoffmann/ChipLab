@@ -51,6 +51,17 @@ BCD_COUNTER = 39
 RING_COUNTER = 40
 JOHNSON_COUNTER = 41
 LFSR = 42
+EDGE_DETECTION = 43
+SYNCHRONIZER = 44
+DEBOUNCER = 45
+CLOCK_ENABLE = 46
+PWM = 47
+MOORE_CONTROL = 48
+MEALY_CONTROL = 49
+TRAFFIC_LIGHT = 50
+HANDSHAKE = 51
+PARKING_COUNTER = 52
+MULTIPLIER = 53
 SETTLE_NS = 10
 
 
@@ -94,6 +105,29 @@ async def sample(dut, selection, inputs, operation=0):
     assert int(dut.uio_oe.value) == 0, f"Selection pins must remain inputs: {context}"
     assert int(dut.uio_out.value) == 0, f"Unused IO output bus must be zero: {context}"
     return int(dut.uo_out.value)
+
+
+async def reset_manual(dut):
+    """Reset with a stopped clock, including synchronous reset registers."""
+    initialize(dut)
+    dut.rst_n.value = 0
+    await Timer(10, unit="ns")
+    dut.clk.value = 1
+    await Timer(10, unit="ns")
+    dut.clk.value = 0
+    dut.rst_n.value = 1
+    await Timer(10, unit="ns")
+
+
+async def step(dut, selection, inputs, operation=0):
+    """Set up inputs, apply one clock edge, then read the settled output."""
+    await sample(dut, selection, inputs, operation)
+    dut.clk.value = 1
+    await Timer(10, unit="ns")
+    output = int(dut.uo_out.value)
+    dut.clk.value = 0
+    await Timer(10, unit="ns")
+    return output
 
 
 def check_bit(output, bit, expected, expression, inputs):

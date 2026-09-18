@@ -148,6 +148,53 @@ module tt_um_chiplab (
     );
 
     // ------------------------------------------------------------------------
+    // Group 6: Input Synchronization and Timing
+    // ------------------------------------------------------------------------
+    wire [7:0] edge_result;
+    wire [7:0] synchronizer_result;
+    wire [7:0] debounce_result;
+    wire [7:0] divider_result;
+    wire [7:0] pwm_result;
+    chiplab_06_input_timing input_timing (
+        .clk(clk), .rst_n(rst_n),
+        .selection(uio_in[5:0]), .data(ui_in),
+        .edge_result(edge_result),
+        .synchronizer_result(synchronizer_result),
+        .debounce_result(debounce_result),
+        .divider_result(divider_result),
+        .pwm_result(pwm_result)
+    );
+
+    // ------------------------------------------------------------------------
+    // Group 7: Finite State Machines
+    // ------------------------------------------------------------------------
+    wire [7:0] moore_result;
+    wire [7:0] mealy_result;
+    wire [7:0] traffic_result;
+    wire [7:0] handshake_result;
+    wire [7:0] parking_result;
+    chiplab_07_state_machines state_machines (
+        .clk(clk), .rst_n(rst_n),
+        .selection(uio_in[5:0]), .data(ui_in),
+        .moore_result(moore_result),
+        .mealy_result(mealy_result),
+        .traffic_result(traffic_result),
+        .handshake_result(handshake_result),
+        .parking_result(parking_result)
+    );
+
+    // ------------------------------------------------------------------------
+    // Group 8: FSM-Controlled Datapaths
+    // ------------------------------------------------------------------------
+    wire [7:0] multiplier_result;
+    chiplab_08_fsm_datapaths fsm_datapaths (
+        .clk(clk), .rst_n(rst_n),
+        .selection(uio_in[5:0]), .data(ui_in),
+        .operation(uio_in[7:6]),
+        .multiplier_result(multiplier_result)
+    );
+
+    // ------------------------------------------------------------------------
     // Main experiment selection
     // ------------------------------------------------------------------------
     always_comb begin
@@ -194,6 +241,17 @@ module tt_um_chiplab (
             `EXP_RING_COUNTER: uo_out = ring_counter_result;
             `EXP_JOHNSON_COUNTER: uo_out = johnson_counter_result;
             `EXP_LFSR: uo_out = lfsr_result;
+            `EXP_EDGE_DETECTION: uo_out = edge_result;
+            `EXP_SYNCHRONIZER: uo_out = synchronizer_result;
+            `EXP_DEBOUNCER: uo_out = debounce_result;
+            `EXP_CLOCK_ENABLE: uo_out = divider_result;
+            `EXP_PWM: uo_out = pwm_result;
+            `EXP_MOORE_CONTROL: uo_out = moore_result;
+            `EXP_MEALY_CONTROL: uo_out = mealy_result;
+            `EXP_TRAFFIC_LIGHT: uo_out = traffic_result;
+            `EXP_HANDSHAKE: uo_out = handshake_result;
+            `EXP_PARKING_COUNTER: uo_out = parking_result;
+            `EXP_MULTIPLIER: uo_out = multiplier_result;
             default: uo_out = 8'b0;
         endcase
     end

@@ -8,6 +8,8 @@ module chiplab_01_basic_boolean (
     output wire [7:0] gates,
     output wire [7:0] boolean_laws
 );
+
+
     // ------------------------------------------------------------------------
     // Experiment 1: Basic gates
     // Apply basic boolean operations to inputs a and b.
@@ -20,7 +22,8 @@ module chiplab_01_basic_boolean (
     assign gates[5] = ~(a | b);     // NOR  (a, b)
     assign gates[6] =   a ^ b;      // XOR  (a, b)
     assign gates[7] = ~(a ^ b);     // XNOR (a, b)
-    
+
+
     // ------------------------------------------------------------------------
     // Experiment 2: Boolean identities
     // Apply De Morgan's, distributivity, and absorption laws to inputs a, b, and c.

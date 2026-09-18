@@ -57,4 +57,21 @@
 `define EXP_JOHNSON_COUNTER 6'd41
 `define EXP_LFSR 6'd42
 
+// Input Synchronization and Timing
+`define EXP_EDGE_DETECTION 6'd43
+`define EXP_SYNCHRONIZER 6'd44
+`define EXP_DEBOUNCER 6'd45
+`define EXP_CLOCK_ENABLE 6'd46
+`define EXP_PWM 6'd47
+
+// Finite State Machines
+`define EXP_MOORE_CONTROL 6'd48
+`define EXP_MEALY_CONTROL 6'd49
+`define EXP_TRAFFIC_LIGHT 6'd50
+`define EXP_HANDSHAKE 6'd51
+`define EXP_PARKING_COUNTER 6'd52
+
+// FSM-Controlled Datapaths
+`define EXP_MULTIPLIER 6'd53
+
 `endif

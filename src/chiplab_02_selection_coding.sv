@@ -16,12 +16,14 @@ module chiplab_02_selection_coding (
     output logic [7:0] rom_result
 );
 
+
     // ------------------------------------------------------------------------
     // Experiment 3: Mux
     // Select one of data[3:0] using data[5:4].
     // ------------------------------------------------------------------------
     wire [1:0] mux_select = data[5:4];
     assign mux_result = {7'b0, data[{1'b0, mux_select}]};
+
 
     // ------------------------------------------------------------------------
     // Experiment 4: Demux
@@ -30,13 +32,15 @@ module chiplab_02_selection_coding (
     wire [1:0] demux_select = data[2:1];
     assign demux_result = {4'b0, (4'b0001 << demux_select) & {4{data[0]}}};
 
+
     // ------------------------------------------------------------------------
     // Experiment 5: Binary decoder
     // Set one output bit for the address in data[2:0].
     // ------------------------------------------------------------------------
     wire [2:0] decoder_select = data[2:0];
     assign decoder_result = 8'b00000001 << decoder_select;
- 
+
+
     // ------------------------------------------------------------------------
     // Experiment 6: Encoder (one-hot)
     // Encode a single set bit; zero or multiple set bits are invalid.
@@ -53,11 +57,13 @@ module chiplab_02_selection_coding (
     wire one_hot = (data != 8'b0) && ((data & (data - 8'd1)) == 8'b0);
     assign encoder_result = {4'b0, one_hot, one_hot ? highest_bit(data) : 3'b0};
 
+
     // ------------------------------------------------------------------------
     // Experiment 7: Priority encoder
     // Encode the highest set bit; output bit 3 marks a valid result.
     // ------------------------------------------------------------------------
     assign priority_result = {4'b0, |data, highest_bit(data)};
+
 
     // ------------------------------------------------------------------------
     // Experiment 8: Dual-priority encoder
@@ -104,17 +110,20 @@ module chiplab_02_selection_coding (
         endcase
     endfunction
 
+
     // ------------------------------------------------------------------------
     // Experiment 9: BCD-to-7-segment decoder
     // Display digits 0-9; values 10-15 blank the display.
     // ------------------------------------------------------------------------
     assign bcd_segments = data[3:0] <= 4'd9 ? hex_segments : 8'b0;
 
+
     // ------------------------------------------------------------------------
     // Experiment 10: HEX-to-7-segment decoder
     // Display data[3:0] as 0-9, A, b, C, d, E, or F.
     // ------------------------------------------------------------------------
     assign hex_segments = {1'b0, seven_segment(data[3:0])};
+
 
     // ------------------------------------------------------------------------
     // Experiment 11: Binary / Gray conversion
@@ -128,11 +137,13 @@ module chiplab_02_selection_coding (
     assign gray_result = {4'b0, data[4] ? binary_value :
                              (data[3:0] ^ {1'b0, data[3:1]})};
 
+
     // ------------------------------------------------------------------------
     // Experiment 12: Parity generator and checker
     // Generate even parity for data[6:0] and check the received bit data[7].
     // ------------------------------------------------------------------------
     assign parity_result = {6'b0, ^data, ^data[6:0]};
+
 
     // ------------------------------------------------------------------------
     // Experiment 13: ROM
