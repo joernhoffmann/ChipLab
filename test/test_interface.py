@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """Shared checks for selection, IO direction, and control signals."""
 import cocotb
-
 from chiplab_helpers import initialize, sample
 
+# Test range for combinatorial, non-clocked designs under test
 COMBINATIONAL = range(1, 23)
-
 
 @cocotb.test()
 async def test_selection_and_controls(dut):

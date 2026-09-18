@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 33: Accumulator using the shared ALU."""
 import cocotb
-
 from chiplab_helpers import ACCUMULATOR, clock_input, start_and_reset
-
 
 @cocotb.test()
 async def test_accumulator(dut):

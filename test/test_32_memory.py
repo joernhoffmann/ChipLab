@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 32: 4 x 4-bit read/write memory."""
 import cocotb
-
 from chiplab_helpers import MEMORY, clock_input, start_and_reset
-
 
 @cocotb.test()
 async def test_memory(dut):

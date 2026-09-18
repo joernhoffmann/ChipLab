@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 18: unsigned 4-bit comparator."""
 import cocotb
-
 from chiplab_helpers import UNSIGNED_COMPARATOR, initialize, sample
-
 
 @cocotb.test()
 async def test_unsigned_comparator(dut):

@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 25: D flip-flop."""
 import cocotb
-
 from chiplab_helpers import D_FLIPFLOP, clock_input, start_and_reset
-
 
 @cocotb.test()
 async def test_d_flipflop(dut):
