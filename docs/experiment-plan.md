@@ -34,10 +34,10 @@ and finite state machines with datapaths.
 20. Logical and arithmetic shifts
 21. Rotation
 22. Arithmetic logic unit (ALU)
-23. Accumulator (with ALU, result register, and feedback)
 
 ## 4. Storage Elements and Memory
 
+23. Accumulator (with ALU, result register, and feedback)
 24. SR latch
 25. D latch
 26. D flip-flop - comparison with the D latch
@@ -97,8 +97,8 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–13 are implemented. `uio_in[7:0]` selects the experiment using its
-number: 1 = `0x01`, 10 = `0x0A`, 13 = `0x0D`. Other codes currently return zero.
+Experiments 1–22 are implemented. `uio_in[5:0]` selects the experiment using its
+number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Interfaces for later experiments remain to be specified.
 

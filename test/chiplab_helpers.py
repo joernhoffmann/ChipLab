@@ -20,6 +20,15 @@ HEX_DECODER = 0x0A
 GRAY_CODE = 0x0B
 PARITY = 0x0C
 ROM = 0x0D
+HALF_ADDER = 0x0E
+FULL_ADDER = 0x0F
+ADDER_4BIT = 0x10
+SUBTRACTOR_4BIT = 0x11
+UNSIGNED_COMPARATOR = 0x12
+SIGNED_COMPARATOR = 0x13
+SHIFTS = 0x14
+ROTATION = 0x15
+ALU = 0x16
 SETTLE_NS = 10
 
 
@@ -36,9 +45,9 @@ def initialize(dut):
     dut.uio_in.value = 0
 
 
-async def sample(dut, selection, inputs):
+async def sample(dut, selection, inputs, operation=0):
     """Apply selection and input bytes, settle, and return the output byte."""
-    dut.uio_in.value = selection
+    dut.uio_in.value = selection | (operation << 6)
     dut.ui_in.value = inputs
     await Timer(SETTLE_NS, unit="ns")
     context = f"selection=0x{selection:02X}, inputs=0x{inputs:02X}"

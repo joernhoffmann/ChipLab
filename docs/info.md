@@ -1,11 +1,12 @@
 # ChipLab
 
 ChipLab is an educational digital logic chip for Tiny Tapeout IHP26b.
-Sections 1 and 2 are implemented: basic logic, data selection, and coding.
+Sections 1–3 are implemented: logic, coding, arithmetic, and data operations.
 
 ## How it works
 
-The design uses synthesizable SystemVerilog. `uio_in[7:0]` selects an experiment.
+The design uses synthesizable SystemVerilog. `uio_in[5:0]` selects an experiment.
+`uio_in[7:6]` selects an operation where needed.
 All bidirectional pins are inputs (`uio_oe = 0`); `uio_out` is zero.
 For experiments 1 and 2, `ui_in[2:0]` provides C, B, A. Higher input bits
 are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
@@ -25,6 +26,15 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x0B` | Binary ↔ Gray code |
 | `0x0C` | Parity generator and checker |
 | `0x0D` | ROM |
+| `0x0E` | Half adder |
+| `0x0F` | Full adder |
+| `0x10` | 4-bit adder |
+| `0x11` | 4-bit subtractor |
+| `0x12` | Unsigned comparator |
+| `0x13` | Signed comparator |
+| `0x14` | Shifts |
+| `0x15` | Rotation |
+| `0x16` | ALU |
 | All other codes | All outputs zero |
 
 All implemented experiments are combinational: clock, reset, and enable do not change their
@@ -91,6 +101,27 @@ and calls the same SystemVerilog function again to find the next match.
 Input `1011_0100` gives positions 7 and 5 (`uo_out = 0xDF`). Missing matches
 have position zero and a cleared valid bit. The function describes combinational
 logic; its two calls do not take two clock cycles.
+
+## Arithmetic and data operations
+
+For experiments 16–22, `A = ui_in[3:0]` and `B = ui_in[7:4]` unless noted.
+
+| Code | Result |
+|---|---|
+| `0x0E` | Sum `[0]`, carry `[1]`; inputs are `ui_in[1:0]` |
+| `0x0F` | Sum `[0]`, carry `[1]`; carry-in is `ui_in[2]` |
+| `0x10` | Sum `[3:0]`, carry `[4]`, signed overflow `[5]` |
+| `0x11` | Difference `[3:0]`, no-borrow `[4]`, signed overflow `[5]` |
+| `0x12` | Unsigned less `[0]`, equal `[1]`, greater `[2]` |
+| `0x13` | Signed less `[0]`, equal `[1]`, greater `[2]` |
+| `0x14` | Shifted value `[3:0]` |
+| `0x15` | Rotated value `[3:0]` |
+| `0x16` | Value `[3:0]`, carry `[4]`, overflow `[5]`, zero `[6]`, negative `[7]` |
+
+Shift and rotation use `ui_in[3:0]` as value and `ui_in[5:4]` as amount.
+For shifts, operation 0 is left, 1 is logical right, and 2 is arithmetic right.
+For rotation, operation bit 0 selects left or right. ALU operations are add,
+subtract, AND, and OR for operation values 0–3.
 
 ## How to test
 

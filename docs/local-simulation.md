@@ -77,7 +77,7 @@ by `test/tb.v`. Each experiment has its own test file: `test/test_01_basic_gates
 `test/test_interface.py`. See [the test guide](../test/README.md) for individual
 test commands and the test structure.
 
-The current RTL implements sections 1 and 2 in SystemVerilog.
+The current RTL implements sections 1–3 in SystemVerilog.
 See [the project description](info.md) for selection codes, pin assignments, and
 output functions. The cocotb tests check truth tables, selection decoding, and
 control-input independence.

@@ -4,7 +4,7 @@ import cocotb
 
 from chiplab_helpers import initialize, sample
 
-IMPLEMENTED = range(1, 14)
+IMPLEMENTED = range(1, 23)
 
 
 @cocotb.test()
@@ -15,23 +15,21 @@ async def test_selection_and_controls(dut):
     Here a settled result is the reference for each control combination.
     """
     initialize(dut)
-    for selection in range(256):
-        for inputs in (0, 1, 7, 0x35, 0x80, 0xB4, 0xFF):
-            dut.clk.value = 0
-            dut.rst_n.value = 1
-            dut.ena.value = 1
-            reference = await sample(dut, selection, inputs)
-            if selection not in IMPLEMENTED:
-                assert reference == 0, f"Unassigned code {selection:#04x} returned {reference:#04x}"
-            for controls in range(8):
-                dut.clk.value = controls & 1
-                dut.rst_n.value = (controls >> 1) & 1
-                dut.ena.value = (controls >> 2) & 1
-                output = await sample(dut, selection, inputs)
-                assert output == reference, (
-                    f"selection={selection:#04x}, input={inputs:#04x}, "
-                    f"ena/rst_n/clk={controls:03b}, output={output:#04x}"
-                )
+    for selection in range(64):
+        for operation in range(4):
+            for inputs in (0, 1, 7, 0x35, 0x80, 0xB4, 0xFF):
+                dut.clk.value = 0
+                dut.rst_n.value = 1
+                dut.ena.value = 1
+                reference = await sample(dut, selection, inputs, operation)
+                if selection not in IMPLEMENTED:
+                    assert reference == 0
+                for controls in range(8):
+                    dut.clk.value = controls & 1
+                    dut.rst_n.value = (controls >> 1) & 1
+                    dut.ena.value = (controls >> 2) & 1
+                    output = await sample(dut, selection, inputs, operation)
+                    assert output == reference
 
 
 @cocotb.test()
@@ -39,10 +37,11 @@ async def test_switching_experiments(dut):
     """Switch to zero and back to catch retained outputs or hidden state."""
     initialize(dut)
     for selection in IMPLEMENTED:
-        for inputs in (0, 1, 0x55, 0xFF):
-            reference = await sample(dut, selection, inputs)
-            assert await sample(dut, 0, inputs) == 0
-            assert await sample(dut, selection, inputs) == reference
+        for operation in range(4):
+            for inputs in (0, 1, 0x55, 0xFF):
+                reference = await sample(dut, selection, inputs, operation)
+                assert await sample(dut, 0, inputs, operation) == 0
+                assert await sample(dut, selection, inputs, operation) == reference
 
 
 @cocotb.test()

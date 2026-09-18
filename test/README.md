@@ -25,7 +25,7 @@ silicon propagation delay. All tests access only public ports, allowing the same
 checks to run against RTL and the gate-level netlist.
 
 Use one file per experiment, numbered according to the experiment plan. Add
-future experiments as `test_14_half_adder.py`, etc., and register them in
+future experiments as `test_23_accumulator.py`, etc., and register them in
 `COCOTB_TEST_MODULES` in the Makefile. Sequential experiments should explicitly
 provide their required clock and reset sequence. RTL files remain organized by
 curriculum block; their numbering is independent of test experiment numbering.
