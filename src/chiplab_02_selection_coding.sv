@@ -17,7 +17,7 @@ module chiplab_02_selection_coding (
 );
 
     // ------------------------------------------------------------------------
-    // Experiment 3: Mux 
+    // Experiment 3: Mux
     // Select one of data[3:0] using data[5:4].
     // ------------------------------------------------------------------------
     wire [1:0] mux_select = data[5:4];
@@ -30,7 +30,7 @@ module chiplab_02_selection_coding (
     wire [1:0] demux_select = data[2:1];
     assign demux_result = {4'b0, (4'b0001 << demux_select) & {4{data[0]}}};
 
-    // ------------------------------------------------------------------------ 
+    // ------------------------------------------------------------------------
     // Experiment 5: Binary decoder
     // Set one output bit for the address in data[2:0].
     // ------------------------------------------------------------------------
@@ -41,8 +41,9 @@ module chiplab_02_selection_coding (
     // Experiment 6: Encoder (one-hot)
     // Encode a single set bit; zero or multiple set bits are invalid.
     // Return valid bit in bit 3, and the encoded value in bits [2:0].
-    // ------------------------------------------------------------------------    
-    // Get the highest set bit. Last match wins, so the result is the highest set bit.
+    // ------------------------------------------------------------------------
+    // Shared helper for experiments 6-8.
+    // Last match wins, so the result is the highest set bit.
     function automatic logic [2:0] highest_bit(input logic [7:0] bits);
         highest_bit = 3'd0;
         for (int i = 0; i < 8; i++)
@@ -140,14 +141,14 @@ module chiplab_02_selection_coding (
     wire [2:0] rom_address = data[2:0];
     always_comb begin
         case (rom_address)
-            3'd0: rom_result = "C";     // 43
-            3'd1: rom_result = "h";     // 68
-            3'd2: rom_result = "i";     // 69
-            3'd3: rom_result = "p";     // 70
-            3'd4: rom_result = "L";     // 4C
-            3'd5: rom_result = "a";     // 61
-            3'd6: rom_result = "b";     // 62
-            3'd7: rom_result = 8'h00;   // NUL
+            3'd0: rom_result = "C";     // 0x43
+            3'd1: rom_result = "h";     // 0x68
+            3'd2: rom_result = "i";     // 0x69
+            3'd3: rom_result = "p";     // 0x70
+            3'd4: rom_result = "L";     // 0x4C
+            3'd5: rom_result = "a";     // 0x61
+            3'd6: rom_result = "b";     // 0x62
+            3'd7: rom_result = 8'h00;   // NULL terminator
             default: rom_result = 8'b0;
         endcase
     end
