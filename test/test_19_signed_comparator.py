@@ -16,4 +16,5 @@ async def test_signed_comparator(dut):
         a = signed_4bit(inputs & 15)
         b = signed_4bit(inputs >> 4)
         expected = (a < b) | ((a == b) << 1) | ((a > b) << 2)
+
         assert await sample(dut, SIGNED_COMPARATOR, inputs) == expected

@@ -94,8 +94,8 @@ endmodule
 
 // ------------------------------------------------------------------------
 // 4-bit ALU
-// Performs addition, subtraction, AND, and OR operations on two 4-bit numbers a and b.
-// The operation is selected by a 2-bit signal.
+// Performs addition, subtraction, AND, and OR on two 4-bit values.
+// operation selects the function; result also contains four status flags.
 // ------------------------------------------------------------------------
 module chiplab_alu_4bit (
     input  wire [3:0] a,
@@ -103,6 +103,8 @@ module chiplab_alu_4bit (
     input  wire [1:0] operation,
     output logic [7:0] result
 );
+    // Subtraction uses a + NOT(b) + 1, so both arithmetic operations
+    // can share the same ripple-carry adder.
     wire [3:0] adder_a = a;
     wire [3:0] adder_b = operation == 2'b01 ? ~b : b;
     wire [3:0] arithmetic_value;
@@ -111,7 +113,7 @@ module chiplab_alu_4bit (
     chiplab_adder_4bit alu_adder (
         .a          (adder_a),
         .b          (adder_b),
-        .carry_in   (operation == 2'b01),   // Carry for substraction
+        .carry_in   (operation == 2'b01),   // Add one for subtraction
         .sum        (arithmetic_value),
         .carry_out  (arithmetic_carry),
         .overflow   (arithmetic_overflow)
@@ -123,26 +125,27 @@ module chiplab_alu_4bit (
         carry = 1'b0;
         overflow = 1'b0;
         case (operation)
-            
-            // Addition
+            // 00: Addition
             2'b00: begin
                 value = arithmetic_value;
                 carry = arithmetic_carry;
                 overflow = arithmetic_overflow;
             end
-            
-            // Substraction
+            // 01: Subtraction
             2'b01: begin
                 value = arithmetic_value;
                 carry = arithmetic_carry;
                 overflow = arithmetic_overflow;
             end
-            // AND
+            // 10: AND
             2'b10: value = a & b;
-            
-            // OR otherwsie
+
+            // 11: OR
             default: value = a | b;
         endcase
+
+        // result[7:4] = sign, zero, overflow, carry
+        // result[3:0] = operation result
         result = {value[3], value == 4'b0, overflow, carry, value};
     end
 endmodule

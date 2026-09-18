@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 7: Encode the highest set bit; output bit 3 marks a valid result."""
 import cocotb
+
 from chiplab_helpers import PRIORITY_ENCODER, initialize, sample
+
 
 @cocotb.test()
 async def test_priority_encoder(dut):

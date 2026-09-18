@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 9: Decode decimal digits; values 10 through 15 blank the display."""
 import cocotb
+
 from chiplab_helpers import BCD_DECODER, initialize, sample
+
 
 # Lit segments for digits 0 through 9; output bits 0..6 mean a..g.
 DIGITS = ("abcdef",     # 0
@@ -17,12 +19,13 @@ DIGITS = ("abcdef",     # 0
                         # 10..15 are blank
 )
 
+
 @cocotb.test()
 async def test_bcd_decoder(dut):
     """Check all input bytes, including unused bits and invalid inputs."""
     initialize(dut)
     for inputs in range(256):
-        # The BCD decoder should only display digits 0 through 9. 
+        # The BCD decoder should only display digits 0 through 9.
         # For inputs 10 through 15, the display should be blank (no segments lit).
         digit = inputs & 15
         lit = DIGITS[digit] if digit < 10 else ""

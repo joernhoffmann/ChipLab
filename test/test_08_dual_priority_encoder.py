@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 8: find the two highest set bits in ui_in[7:0]."""
 import cocotb
+
 from chiplab_helpers import DUAL_PRIORITY, initialize, sample
+
 
 @cocotb.test()
 async def test_dual_priority_encoder(dut):

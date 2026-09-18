@@ -7,7 +7,9 @@ has a separate test with expected values taken from an explicit truth table.
 Adjacent output bits represent the two sides of the identity.
 """
 import cocotb
+
 from chiplab_helpers import BOOLEAN_IDENTITIES, check_bit, initialize, sample
+
 
 async def check_identity(dut, bits, expressions, rows):
     """Check each side against a truth table, not just against the other side.
@@ -18,9 +20,12 @@ async def check_identity(dut, bits, expressions, rows):
     initialize(dut)
     for a, b, c, expected in rows:
         inputs = a | (b << 1) | (c << 2)
+
         output = await sample(dut, BOOLEAN_IDENTITIES, inputs)
+
         for bit, expression in zip(bits, expressions):
             check_bit(output, bit, expected, expression, inputs)
+
 
 @cocotb.test()
 async def test_de_morgan_nand(dut):

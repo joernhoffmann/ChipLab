@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 """Experiment 12: Generate even parity and check the received parity bit at ui_in[7]."""
 import cocotb
+
 from chiplab_helpers import PARITY, initialize, sample
+
 
 @cocotb.test()
 async def test_parity(dut):
