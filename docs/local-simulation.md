@@ -72,7 +72,10 @@ not need to be recreated when adding the matching system runtime library.
 
 List RTL files in both `info.yaml` (`source_files`) and `test/Makefile`
 (`PROJECT_SOURCES`). The top module in `info.yaml` must match the module instantiated
-by `test/tb.v`. Functional tests belong in `test/test.py`.
+by `test/tb.v`. Each experiment has its own test file: `test/test_01_basic_gates.py`,
+`test/test_02_boolean_identities.py`, and future numbered experiment modules. Shared interface checks are in
+`test/test_interface.py`. See [the test guide](../test/README.md) for individual
+test commands and the test structure.
 
 The current RTL implements basic gates and Boolean identities in SystemVerilog.
 See [the project description](info.md) for selection codes, pin assignments, and
