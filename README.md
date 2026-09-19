@@ -1,3 +1,5 @@
+![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+
 # ChipLab
 
 ChipLab is an educational digital logic project for Tiny Tapeout IHP26b. It
