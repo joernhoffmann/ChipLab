@@ -112,7 +112,7 @@ module chiplab_09_sound (
     input wire [5:0] selection,
     input wire [1:0] operation,
     input wire [7:0] data,
-    output wire [7:0] psg_result
+    output logic [7:0] psg_result
 );
     // - Address first, then write/read.
     // - Operation 00: play, keep settings.
@@ -430,5 +430,11 @@ module chiplab_09_sound (
 
     // Output: register readback or audio output
     wire [7:0] audio_out = {sound_enable, envelope_running, level, raw_signal, audio_pwm};
-    assign psg_result = operation == OP_READ ? read_data : audio_out;
+    always_comb begin
+        case (operation)
+            OP_PLAY, OP_ADDRESS, OP_WRITE:  psg_result = audio_out;
+            OP_READ:                        psg_result = read_data;
+            default:                        psg_result = 8'd0;
+        endcase
+    end
 endmodule

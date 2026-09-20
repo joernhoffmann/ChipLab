@@ -50,7 +50,7 @@
 `include "chiplab_experiments.svh"
 
 `ifndef BNN_NEURON_COUNT
-`define BNN_NEURON_COUNT 2      // Reasonable small for TinyTapout design
+`define BNN_NEURON_COUNT 1
 `endif
 
 module chiplab_08_bnn (
@@ -72,11 +72,13 @@ module chiplab_08_bnn (
     end
 `endif
 
+    // Operations
     localparam [1:0] OP_PLAY    = 2'd0,
                      OP_ADDRESS = 2'd1,
                      OP_WRITE   = 2'd2,
                      OP_READ    = 2'd3;
 
+    // Register addresses
     localparam [7:0] REG_ADDR_INPUT     = 8'h00,
                      REG_ADDR_CONTROL   = 8'h01,
                      REG_ADDR_OUTPUT    = 8'h02,
@@ -87,14 +89,19 @@ module chiplab_08_bnn (
                      REG_ADDR_MATCHES   = 8'h07,
                      REG_ADDR_COUNT     = 8'h08;
 
-    wire selected = selection == `EXP_BNN;
-    wire write_register = selected && operation == OP_WRITE;
-
     // Register bank
     logic [7:0] address;
     logic [7:0] input_bits;
     logic enable;
     logic [INDEX_WIDTH-1:0] neuron_select;
+
+    // Selection and write signals
+    wire selected = selection == `EXP_BNN;
+    wire write_register = selected && operation == OP_WRITE;
+    wire configuration_write = write_register &&
+        (address == REG_ADDR_INPUT ||
+         address == REG_ADDR_WEIGHTS ||
+         address == REG_ADDR_THRESHOLD);
 
     // Yosys specific: implement the resettable weight bank as individual registers
     // Thus as flipflops rather than a memory array.
@@ -106,10 +113,23 @@ module chiplab_08_bnn (
     logic [NEURON_COUNT-1:0] outputs;
     logic result_valid;
 
-    wire configuration_write = write_register &&
-        (address == REG_ADDR_INPUT ||
-         address == REG_ADDR_WEIGHTS ||
-         address == REG_ADDR_THRESHOLD);
+
+    // Count set bits with a balanced adder tree.Result ranges from 0 to 8.
+    // This is a divide and conquer approach for counting set bits.
+    function automatic logic [3:0] popcount8(input logic [7:0] bits);
+        logic [1:0] count_01, count_23, count_45, count_67;
+        logic [2:0] count_left, count_right;
+
+        count_01 = {1'b0, bits[0]} + {1'b0, bits[1]};
+        count_23 = {1'b0, bits[2]} + {1'b0, bits[3]};
+        count_45 = {1'b0, bits[4]} + {1'b0, bits[5]};
+        count_67 = {1'b0, bits[6]} + {1'b0, bits[7]};
+
+        count_left  = {1'b0, count_01} + {1'b0, count_23};
+        count_right = {1'b0, count_45} + {1'b0, count_67};
+
+        popcount8 = {1'b0, count_left} + {1'b0, count_right};
+    endfunction
 
 
     // ------------------------------------------------------------------------
@@ -124,16 +144,7 @@ module chiplab_08_bnn (
     // Compute the match bits for the active neuron.
     wire [7:0] match_bits = ~(input_bits ^ weights[active_neuron]);
 
-    // Balanced adder tree: eight bits become one count from 0 to 8.
-    wire [1:0] count_01 = {1'b0, match_bits[0]} + {1'b0, match_bits[1]};
-    wire [1:0] count_23 = {1'b0, match_bits[2]} + {1'b0, match_bits[3]};
-    wire [1:0] count_45 = {1'b0, match_bits[4]} + {1'b0, match_bits[5]};
-    wire [1:0] count_67 = {1'b0, match_bits[6]} + {1'b0, match_bits[7]};
-
-    wire [2:0] count_low  = {1'b0, count_01} + {1'b0, count_23};
-    wire [2:0] count_high = {1'b0, count_45} + {1'b0, count_67};
-    
-    wire [3:0] match_count = {1'b0, count_low} + {1'b0, count_high};
+    wire [3:0] match_count = popcount8(match_bits);
 
     // Determine the output of the active neuron based on the match count and threshold.
     wire neuron_output = match_count >= thresholds[active_neuron];
@@ -171,7 +182,7 @@ module chiplab_08_bnn (
                     REG_ADDR_WEIGHTS    : weights[neuron_select]    <= data;
                     REG_ADDR_THRESHOLD  : thresholds[neuron_select] <= data[3:0];
                     REG_ADDR_NEURON     :
-                        if (data < NEURON_COUNT)
+                        if (data < 8'(NEURON_COUNT))
                             neuron_select <= data[INDEX_WIDTH-1:0];
 
                     default: ;
@@ -209,7 +220,7 @@ module chiplab_08_bnn (
                 outputs[neuron_index] <= neuron_output;
 
                 // The final output bit and valid flag update on the same edge
-                if (neuron_index == NEURON_COUNT - 1)
+                if (neuron_index == INDEX_WIDTH'(NEURON_COUNT - 1))
                     result_valid <= 1'b1;
 
                 // Continue with the next weight set
@@ -223,10 +234,10 @@ module chiplab_08_bnn (
     // ------------------------------------------------------------------------
     // Register readback and output selection
     // ------------------------------------------------------------------------
-    // - Unused high bits are zero-filled by unsigned assignment.
+    // - Explicitly extend unsigned values to eight bits for readback.
     // - MATCHES and COUNT expose the selected neuron's calculation directly.
-    wire [7:0] output_data = outputs;
-    wire [7:0] neuron_select_data = neuron_select;
+    wire [7:0] output_data = 8'(outputs);
+    wire [7:0] neuron_select_data = 8'(neuron_select);
     logic [7:0] read_data;
 
     always_comb begin

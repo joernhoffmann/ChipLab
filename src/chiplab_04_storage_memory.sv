@@ -232,12 +232,11 @@ module chiplab_04_storage_memory (
 
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 32: Small read/write memory
-    // data[5:4] is the address, data[3:0] is write data, and data[6] enables write.
     // ----------------------------------------------------------------------------------------------------------------
-    (* mem2reg *) logic [3:0] memory[0:3];
-    wire write_enable  = data[6];
+    (* mem2reg *) logic [3:0] memory[0:3];          // Yosys: infer flip-flops instead of memory / blockram etc.
     wire [1:0] address = data[5:4];
     wire [3:0] data_in = data[3:0];
+    wire write_enable  = data[6];
     integer i;
 
     always_ff @(posedge clk or negedge rst_n) begin
@@ -256,7 +255,9 @@ module chiplab_04_storage_memory (
 
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 33: Accumulator
-    // data[3:0] is the operand, data[4] enables update, and data[5] clears it.
+    // - data[3:0] : operand
+    // - data[4]   : enables update
+    // - data[5]   : clears accumulator
     // ----------------------------------------------------------------------------------------------------------------
     logic [7:0] accumulator;
 
@@ -278,7 +279,10 @@ module chiplab_04_storage_memory (
 
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 54 to 55
-    // Shared buffer commands: 00/11 hold, 01 push, 10 pop.
+    // Shared buffer commands:
+    //  - 00/11 hold
+    //  - 01 push
+    //  - 10 pop.
     // ----------------------------------------------------------------------------------------------------------------
     wire op_push = operation == 2'b01;
     wire op_pop  = operation == 2'b10;
@@ -286,7 +290,8 @@ module chiplab_04_storage_memory (
 
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 54: FIFO
-    // Four nibbles, oldest first. Full also supplies bit 2 of the fill count.
+    // Four nibbles, oldest first.
+    //Full also supplies bit 2 of the fill count.
     // ----------------------------------------------------------------------------------------------------------------
     logic [3:0] fifo_memory [0:3];
     logic [1:0] read_pointer, write_pointer;
@@ -328,7 +333,8 @@ module chiplab_04_storage_memory (
 
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 55: Stack
-    // Four nibbles, newest first. Push on full and pop on empty do nothing.
+    // Four nibbles, newest first.
+    // Push on full and pop on empty do nothing.
     // ----------------------------------------------------------------------------------------------------------------
     logic [3:0] stack_memory [0:3];
     logic [2:0] stack_count;
