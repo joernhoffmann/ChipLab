@@ -87,7 +87,6 @@ module tt_um_chiplab (
     // --------------------------------------------------------------------
     // Group 4: Storage Elements and Memory
     // --------------------------------------------------------------------
-    wire [7:0] sr_latch_result;
     wire [7:0] d_latch_result;
     wire [7:0] d_flipflop_result;
     wire [7:0] latch_ff_result;
@@ -108,7 +107,6 @@ module tt_um_chiplab (
         .data(ui_in),
         .alu_result(alu_result),
         .accumulator_value(accumulator_value),
-        .sr_latch_result(sr_latch_result),
         .d_latch_result(d_latch_result),
         .d_flipflop_result(d_flipflop_result),
         .latch_ff_result(latch_ff_result),
@@ -241,7 +239,6 @@ module tt_um_chiplab (
             `EXP_SHIFTS: uo_out = shift_result;
             `EXP_ROTATION: uo_out = rotate_result;
             `EXP_ALU: uo_out = alu_result;
-            `EXP_SR_LATCH: uo_out = sr_latch_result;
             `EXP_D_LATCH: uo_out = d_latch_result;
             `EXP_D_FLIPFLOP: uo_out = d_flipflop_result;
             `EXP_T_FLIPFLOP: uo_out = t_ff_result;

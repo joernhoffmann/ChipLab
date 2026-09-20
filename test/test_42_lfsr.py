@@ -25,7 +25,7 @@ async def test_lfsr(dut):
         seen.add(output)
     assert seen == set(range(1, 16))
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, LFSR, 0)
     for _ in range(3):
         assert await clock_input(dut, LFSR, 0) == held

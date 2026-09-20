@@ -17,7 +17,7 @@ async def test_shift_register(dut):
     for bit, expected in ((1, 1), (0, 2), (1, 5), (1, 11), (0, 6)):
         assert await clock_input(dut, SHIFT_REGISTER, 0x10 | bit) == expected
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, SHIFT_REGISTER, 0)
     for _ in range(3):
         assert await clock_input(dut, SHIFT_REGISTER, 0) == held
@@ -32,4 +32,3 @@ async def test_shift_register(dut):
     dut.rst_n.value = 0
     await Timer(2, unit="ns")
     assert await sample(dut, SHIFT_REGISTER, 0) == 0
-

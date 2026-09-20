@@ -12,7 +12,6 @@ module chiplab_04_storage_memory (
     input  wire [7:0] alu_result,
 
     output wire [3:0] accumulator_value,
-    output wire [7:0] sr_latch_result,
     output wire [7:0] d_latch_result,
     output wire [7:0] d_flipflop_result,
     output wire [7:0] latch_ff_result,
@@ -33,47 +32,16 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 23: SR latch (set-reset latch)
-    // Is a level-sensitive latch that sets on data[0] and resets on data[1].
-    // When both inputs are high, this implementation holds Q and flags the invalid input combination.
-    // Output:
-    //  - Bit 0: Q
-    //  - Bit 1: ~Q
-    //  - Bit 2: Set & Reset (data[0] & data[1]), thus flags both inputs asserted together (invalid state)
-    //  - Bits 3-7: 0
-    // ----------------------------------------------------------------------------------------------------------------
-    logic sr_q;
-
-    always_latch begin
-        if (!rst_n)
-            sr_q <= 1'b0;
-
-        else if (selection == `EXP_SR_LATCH) begin
-            case (data[1:0])
-                2'b01:   sr_q <= 1'b1;
-                2'b10:   sr_q <= 1'b0;
-                default: sr_q <= sr_q;
-            endcase
-        end
-    end
-
-    assign sr_latch_result = {5'b0, &data[1:0], ~sr_q, sr_q};
-
-
-    // ----------------------------------------------------------------------------------------------------------------
     // Experiment 24: D latch (data latch)
-    // Is a level-sensitive latch that captures data[0] when data[1] is high.
+    // Follows data[0] while selected and data[1] is high; otherwise holds its value.
+    // No reset: open the gate once to establish a known value after power-up.
     // Output:
     //  - Bit 0: Q
     //  - Bits 1-7: 0
     // ----------------------------------------------------------------------------------------------------------------
     logic d_latch_q;
-
     always_latch begin
-        if (!rst_n)
-            d_latch_q <= 1'b0;
-
-        else if ((selection == `EXP_D_LATCH) && data[1])
+        if ((selection == `EXP_D_LATCH) && data[1])
             d_latch_q <= data[0];
     end
 
@@ -100,14 +68,11 @@ module chiplab_04_storage_memory (
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 28: D latch and D flip-flop comparison
     // Compares the level-sensitive D latch with the edge-triggered D flip-flop.
+    // Only the flip-flop has a reset; initialize the latch by opening its gate.
     // ----------------------------------------------------------------------------------------------------------------
     logic compare_latch_q, compare_ff_q;
-
     always_latch begin
-        if (!rst_n)
-            compare_latch_q <= 1'b0;
-
-        else if ((selection == `EXP_LATCH_FLIPFLOP) && data[1])
+        if ((selection == `EXP_LATCH_FLIPFLOP) && data[1])
             compare_latch_q <= data[0];
     end
 

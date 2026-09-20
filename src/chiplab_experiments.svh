@@ -34,7 +34,7 @@
 `define EXP_ALU 6'd22
 
 // Storage Elements and Memory
-`define EXP_SR_LATCH 6'd23
+// Code 23 is reserved (former SR latch).
 `define EXP_D_LATCH 6'd24
 `define EXP_D_FLIPFLOP 6'd25
 `define EXP_T_FLIPFLOP 6'd26

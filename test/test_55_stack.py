@@ -43,7 +43,7 @@ async def test_stack(dut):
         for _ in range(5):
             await command(POP)
 
-    # Interleaved operations exercise reused slots and FIFO pointer wraparound.
+    # Interleaved operations exercise reused slots and changing stack depth.
     rng = random.Random(54)
     for _ in range(300):
         await command(rng.choice((PUSH, POP)), rng.randrange(256))

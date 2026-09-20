@@ -17,7 +17,7 @@ async def test_ring_counter(dut):
     for expected in (2, 4, 8, 1) * 3:
         assert await clock_input(dut, RING_COUNTER, 0x10) == expected
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, RING_COUNTER, 0)
     for _ in range(3):
         assert await clock_input(dut, RING_COUNTER, 0) == held
@@ -32,4 +32,3 @@ async def test_ring_counter(dut):
     dut.rst_n.value = 0
     await Timer(2, unit="ns")
     assert await sample(dut, RING_COUNTER, 0) == 1
-

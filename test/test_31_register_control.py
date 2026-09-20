@@ -17,3 +17,7 @@ async def test_register_control(dut):
 
     # Clear
     assert await clock_input(dut, REGISTER_CONTROL, 0x2F) == 0
+
+    # Control 11 is a second load command; check every possible register value.
+    for value in range(16):
+        assert await clock_input(dut, REGISTER_CONTROL, 0x30 | value) == value

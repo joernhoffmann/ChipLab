@@ -226,15 +226,70 @@ async def test_psg_sources_and_prescalers(dut):
             output = await step(dut, PSG, 0)
             assert bool(output & RAW) == bool((tick // half_period) & 1)
 
-    # Fastest programmable envelope divider, including stop at zero.
+
+@cocotb.test()
+async def test_psg_envelope_prescalers(dut):
+    await reset_manual(dut)
+    programmable = bool(await read(dut, REG_ADDR_ENVELOPE_PRESCALE))
+
+    # Check every programmable divider, or fixed /4096 when the extension is absent.
+    for exponent in range(8) if programmable else (2,):
+        await reset_manual(dut)
+        await write(dut, REG_ADDR_ENVELOPE_PRESCALE, exponent)
+        assert await read(dut, REG_ADDR_ENVELOPE_PRESCALE) == (exponent if programmable else 0)
+        await write(dut, REG_ADDR_VOLUME, 1)
+        await write(dut, REG_ADDR_CONTROL, ENABLE | ENVELOPE)
+        await write(dut, REG_ADDR_TRIGGER, 1)
+        interval = 1 << (10 + exponent)
+
+        # Decay occurs exactly at the interval boundary and stays at zero afterward.
+        for tick in range(1, interval + 2):
+            output = await step(dut, PSG, 0)
+            assert ((output >> 2) & 15) == int(tick < interval)
+            assert bool(output & RUNNING) == (tick < interval)
+
+
+@cocotb.test()
+async def test_psg_envelope_pause_and_volume(dut):
     await reset_manual(dut)
     programmable = bool(await read(dut, REG_ADDR_ENVELOPE_PRESCALE))
     await write(dut, REG_ADDR_ENVELOPE_PRESCALE, 0)
-    await write(dut, REG_ADDR_VOLUME, 1)
+    interval = 1024 if programmable else 4096
+    await write(dut, REG_ADDR_VOLUME, 2)
     await write(dut, REG_ADDR_CONTROL, ENABLE | ENVELOPE)
     await write(dut, REG_ADDR_TRIGGER, 1)
-    interval = 1024 if programmable else 4096
-    for tick in range(1, interval + 1):
+    for _ in range(10):
+        await step(dut, PSG, 0)
+
+    # Sound off pauses decay. Changing VOLUME does not reload the current envelope.
+    await write(dut, REG_ADDR_CONTROL, ENVELOPE)
+    await write(dut, REG_ADDR_VOLUME, 0)
+    for _ in range(interval + 1):
         output = await step(dut, PSG, 0)
-        assert ((output >> 2) & 15) == (tick < interval)
-        assert bool(output & RUNNING) == (tick < interval)
+        assert ((output >> 2) & 15) == 2
+        assert output & RUNNING
+        assert output & (RAW | AUDIO) == 0
+
+    # Deselection freezes both the waveform and the envelope for longer than a decay interval.
+    await write(dut, REG_ADDR_CONTROL, ENABLE | ENVELOPE)
+    held = await sample(dut, PSG, 0)
+    for _ in range(interval + 1):
+        await step(dut, 0, 0)
+    assert await sample(dut, PSG, 0) == held
+
+    # Envelope mode off selects fixed volume and pauses decay without discarding its level.
+    await write(dut, REG_ADDR_CONTROL, ENABLE)
+    for _ in range(interval + 1):
+        output = await step(dut, PSG, 0)
+        assert ((output >> 2) & 15) == 0
+        assert output & RUNNING
+        assert output & AUDIO == 0
+    output = await write(dut, REG_ADDR_CONTROL, ENABLE | ENVELOPE)
+    assert ((output >> 2) & 15) == 2
+
+    # TRIGGER reads zero while the envelope continues to advance internally.
+    await write(dut, REG_ADDR_VOLUME, 2)
+    await write(dut, REG_ADDR_TRIGGER, 1)
+    for _ in range(interval):
+        assert await step(dut, PSG, 0, OP_READ) == 0
+    assert ((await sample(dut, PSG, 0) >> 2) & 15) == 1

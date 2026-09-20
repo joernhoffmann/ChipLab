@@ -19,7 +19,7 @@ async def test_up_down_counter(dut):
     for step in range(1, 18):
         assert await clock_input(dut, UP_DOWN_COUNTER, 0x10) == (15 + step) % 16
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, UP_DOWN_COUNTER, 0)
     for _ in range(3):
         assert await clock_input(dut, UP_DOWN_COUNTER, 0) == held
@@ -34,4 +34,3 @@ async def test_up_down_counter(dut):
     dut.rst_n.value = 0
     await Timer(2, unit="ns")
     assert await sample(dut, UP_DOWN_COUNTER, 0) == 0
-

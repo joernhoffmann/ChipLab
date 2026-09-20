@@ -17,7 +17,7 @@ async def test_johnson_counter(dut):
     for expected in (1, 3, 7, 15, 14, 12, 8, 0) * 2:
         assert await clock_input(dut, JOHNSON_COUNTER, 0x10) == expected
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, JOHNSON_COUNTER, 0)
     for _ in range(3):
         assert await clock_input(dut, JOHNSON_COUNTER, 0) == held
@@ -32,4 +32,3 @@ async def test_johnson_counter(dut):
     dut.rst_n.value = 0
     await Timer(2, unit="ns")
     assert await sample(dut, JOHNSON_COUNTER, 0) == 0
-

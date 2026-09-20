@@ -37,7 +37,7 @@ and finite state machines with datapaths.
 
 ## 4. Storage Elements and Memory
 
-23. SR latch
+23. Reserved (former SR latch; outputs zero)
 24. D latch
 25. D flip-flop
 26. T flip-flop
@@ -111,14 +111,14 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–57 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–22 and 24–57 are implemented; code 23 is reserved. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
-Storage, timing, and FSM experiments use `clk` and `rst_n`.
+Clocked storage, timing, and FSM experiments use `clk` and `rst_n`.
+The D latches in experiments 24 and 28 have no reset and must be initialized through their gate.
 
 ## Implementation Considerations
 
 Latch inference and asynchronous resets require validation in the IHP flow.
-The SR latch experiment must define the forbidden input combination and discuss
-its release behavior. RTL simulation does not model analog metastability.
+Latch data must be stable when the gate closes. RTL simulation does not model analog metastability.
 Output selection logic and timer widths contribute to the area budget.

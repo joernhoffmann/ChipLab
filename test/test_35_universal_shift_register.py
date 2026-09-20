@@ -23,7 +23,7 @@ async def test_universal_shift_register(dut):
     for value in range(16):
         assert await clock_input(dut, UNIVERSAL_SHIFT_REGISTER, value, 3) == value
 
-    # Hold with enable low (or operation 00).
+    # Operation 00 holds the universal shift register.
     held = await sample(dut, UNIVERSAL_SHIFT_REGISTER, 0)
     for _ in range(3):
         assert await clock_input(dut, UNIVERSAL_SHIFT_REGISTER, 0) == held

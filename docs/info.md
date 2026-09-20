@@ -35,7 +35,7 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x14` | Shifts |
 | `0x15` | Rotation |
 | `0x16` | ALU |
-| `0x17` | SR latch |
+| `0x17` | Reserved (outputs zero) |
 | `0x18` | D latch |
 | `0x19` | D flip-flop |
 | `0x1A` | T flip-flop |
@@ -72,9 +72,9 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x39` | Binarized neural network |
 | All other codes | All outputs zero |
 
-Experiments 1–22 are combinational. Experiments 23–57 store state and use
-`clk` or latch controls. `rst_n` resets their state. Allow signals to settle
-before sampling.
+Experiments 1–22 are combinational. Experiments 24–57 store state and use
+`clk` or latch controls. `rst_n` resets the clocked storage elements; the two
+D latches have no reset. Allow signals to settle before sampling.
 
 | Output bit | Basic gates (`0x01`) | Boolean identities (`0x02`) |
 |---|---|---|
@@ -162,7 +162,6 @@ subtract, AND, and OR for operation values 0–3.
 
 | Code | Input | Output |
 |---|---|---|
-| `0x17` | Set `[0]`, reset `[1]` | Q `[0]`, /Q `[1]`, invalid `[2]` |
 | `0x18` | D `[0]`, gate `[1]` | Q `[0]` |
 | `0x19` | D `[0]` | Q `[0]` |
 | `0x1A` | Toggle `[0]` | Q `[0]` |
@@ -173,6 +172,12 @@ subtract, AND, and OR for operation values 0–3.
 | `0x1F` | Data `[3:0]`, control `[5:4]` | Register `[3:0]` |
 | `0x20` | Data `[3:0]`, address `[5:4]`, write `[6]` | Read data `[3:0]` |
 | `0x21` | Operand `[3:0]`, enable `[4]`, clear `[5]` | ALU result and flags |
+
+The D latches in `0x18` and `0x1C` have an unspecified power-up value and ignore
+`rst_n`. To initialize one on the dev kit, select its experiment, set D with
+`ui_in[0]`, then raise and lower the gate with `ui_in[1]` while keeping D stable.
+With the gate low or the experiment deselected, the latch holds its value.
+In `0x1C`, reset still clears the flip-flop output.
 
 The control values for `0x1F` are hold, load, clear, and load. The accumulator
 feeds its low four bits back into the same ALU used by experiment 22.

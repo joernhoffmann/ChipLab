@@ -17,7 +17,7 @@ async def test_bcd_counter(dut):
     for step in range(1, 31):
         assert await clock_input(dut, BCD_COUNTER, 0x10) == step % 10
 
-    # Hold with enable low (or operation 00).
+    # Enable low holds the register; operation bits are unused.
     held = await sample(dut, BCD_COUNTER, 0)
     for _ in range(3):
         assert await clock_input(dut, BCD_COUNTER, 0) == held
@@ -32,4 +32,3 @@ async def test_bcd_counter(dut):
     dut.rst_n.value = 0
     await Timer(2, unit="ns")
     assert await sample(dut, BCD_COUNTER, 0) == 0
-
