@@ -386,7 +386,8 @@ module chiplab_09_sound (
     // - Level 15       : pass full source
     // - Source low     : silence, including at maximum volume
     // - PWM frequency  : f_clk / 15
-    // - Zero volume or disabled: mute
+    // - Zero level or sound disabled: mute
+    // - In envelope mode, VOLUME is loaded on trigger; later writes do not change the current envelope level.
     logic source_signal;
     always_comb begin
         // Combine the two generators without another oscillator

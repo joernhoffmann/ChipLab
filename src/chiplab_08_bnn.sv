@@ -114,7 +114,7 @@ module chiplab_08_bnn (
     logic result_valid;
 
 
-    // Count set bits with a balanced adder tree.Result ranges from 0 to 8.
+    // Count set bits with a balanced adder tree. Result ranges from 0 to 8.
     // This is a divide and conquer approach for counting set bits.
     function automatic logic [3:0] popcount8(input logic [7:0] bits);
         logic [1:0] count_01, count_23, count_45, count_67;

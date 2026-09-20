@@ -226,7 +226,7 @@ module chiplab_03_arithmetic_data (
 
     // ------------------------------------------------------------------------
     // Experiment 17: 4-bit subtractor
-    // Calculate a-b as a+(NOT b)+1 using the same 4-bit adder.
+    // Calculate a-b as a+(NOT b)+1 using a separate instance of the 4-bit adder module.
     // ------------------------------------------------------------------------
     wire [3:0] difference;
     wire no_borrow, subtract_overflow;

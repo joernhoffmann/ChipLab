@@ -7,6 +7,7 @@ module chiplab_07_state_machines (
     input wire rst_n,
     input wire [5:0] selection,
     input wire [7:0] data,
+    
     output wire [7:0] moore_result,
     output wire [7:0] mealy_result,
     output wire [7:0] traffic_result,
@@ -64,7 +65,7 @@ module chiplab_07_state_machines (
 
     // ------------------------------------------------------------------------
     // Experiment 49: Mealy control
-    // The same states; release also follows request without waiting for an edge.
+    // While ACTIVE, release follows release_request without waiting for a clock edge.
     // ------------------------------------------------------------------------
     logic mealy_state, mealy_next;
 
@@ -270,7 +271,7 @@ module chiplab_07_state_machines (
         end
 
         else begin
-            // Prevent latches
+            // Clear event pulses each clock, including while paused.
             entered <= 1'b0;
             exited  <= 1'b0;
 
@@ -289,7 +290,7 @@ module chiplab_07_state_machines (
         end
     end
 
-    // Output: {WAIT_CLEAR, OCCUPIED, EXITED, ENTERED, OCCUPANCY}
+    // Output: {WAIT_CLEAR, BUSY, EXITED, ENTERED, OCCUPANCY}
     assign parking_result = {parking_state == WAIT_CLEAR, parking_state != PARK_IDLE, exited, entered, occupancy};
 
     wire _unused = &{data[7:5], data[3], 1'b0};

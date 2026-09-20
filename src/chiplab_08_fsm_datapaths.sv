@@ -28,11 +28,11 @@ module chiplab_08_fsm_datapaths (
     logic [7:0] product, shifted_a;
     logic [3:0] remaining_b;
 
-    // Reuse two 4-bit adders from group 3 for the 8-bit sum.
+    // Two separate instances of the group 3 adder module form the 8-bit sum.
     wire [7:0] sum;
     wire low_carry, high_carry, low_overflow, high_overflow;
 
-    // Instantiate two 4-bit adders to form an 8-bit adder.
+    // Connect the low adder's carry-out to the high adder's carry-in.
     chiplab_adder_4bit low_adder (
         .a(product[3:0]),
         .b(shifted_a[3:0]),

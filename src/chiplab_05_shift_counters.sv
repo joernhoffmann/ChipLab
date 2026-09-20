@@ -45,7 +45,8 @@ module chiplab_05_shift_counters (
 
     // ------------------------------------------------------------------------
     // Experiment 34: Shift register
-    // Shift left; data[0] is serial input
+    // - shifts data in and to the left
+    // - data[0] is serial input
     // ------------------------------------------------------------------------
     logic [3:0] shift_register;
     always_ff @(posedge clk or negedge rst_n) begin
@@ -69,10 +70,10 @@ module chiplab_05_shift_counters (
     // ------------------------------------------------------------------------
     logic [3:0] universal_shift_register;
     localparam [1:0]
-        HOLD        = 2'b00,
-        SHIFT_LEFT  = 2'b01,
-        SHIFT_RIGHT = 2'b10,
-        LOAD        = 2'b11;
+        OP_HOLD        = 2'b00,
+        OP_SHIFT_LEFT  = 2'b01,
+        OP_SHIFT_RIGHT = 2'b10,
+        OP_LOAD        = 2'b11;
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
@@ -80,9 +81,10 @@ module chiplab_05_shift_counters (
 
         else if (enable_universal) begin
             case (operation)
-                SHIFT_LEFT:  universal_shift_register <= {universal_shift_register[2:0], data[0]};
-                SHIFT_RIGHT: universal_shift_register <= {data[0], universal_shift_register[3:1]};
-                LOAD:        universal_shift_register <= data[3:0];
+                OP_HOLD:        universal_shift_register <= universal_shift_register;
+                OP_SHIFT_LEFT:  universal_shift_register <= {universal_shift_register[2:0], data[0]};
+                OP_SHIFT_RIGHT: universal_shift_register <= {data[0], universal_shift_register[3:1]};
+                OP_LOAD:        universal_shift_register <= data[3:0];
                 default: ;
             endcase
         end
@@ -163,7 +165,7 @@ module chiplab_05_shift_counters (
     // ------------------------------------------------------------------------
     // Experiment 40: Ring counter
     // Rotate one set bit
-    // Reset seeds 0001
+    // Reset seeds "0001"
     // ------------------------------------------------------------------------
     logic [3:0] ring_counter;
     always_ff @(posedge clk or negedge rst_n) begin
@@ -198,7 +200,7 @@ module chiplab_05_shift_counters (
     // XOR bits 3 and 2 for a 15-state sequence.
     // - Tap polynomial       : x^4 + x^3 + 1 (stages 4 and 3, left shift)
     // - Forward recurrence   : s[n+4] = s[n+1] XOR s[n]
-    // Reset seeds in 0001
+    // Reset seeds "0001"
     // ------------------------------------------------------------------------
     logic [3:0] lfsr;
     always_ff @(posedge clk or negedge rst_n) begin

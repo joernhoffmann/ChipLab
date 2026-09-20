@@ -35,6 +35,7 @@ module chiplab_04_storage_memory (
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 23: SR latch (set-reset latch)
     // Is a level-sensitive latch that sets on data[0] and resets on data[1].
+    // When both inputs are high, this implementation holds Q and flags the invalid input combination.
     // Output:
     //  - Bit 0: Q
     //  - Bit 1: ~Q
@@ -291,7 +292,7 @@ module chiplab_04_storage_memory (
     // ----------------------------------------------------------------------------------------------------------------
     // Experiment 54: FIFO
     // Four nibbles, oldest first.
-    //Full also supplies bit 2 of the fill count.
+    // Full also supplies bit 2 of the fill count.
     // ----------------------------------------------------------------------------------------------------------------
     logic [3:0] fifo_memory [0:3];
     logic [1:0] read_pointer, write_pointer;
