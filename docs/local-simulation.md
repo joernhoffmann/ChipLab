@@ -107,3 +107,20 @@ make -B GATES=yes
 RTL simulation checks digital behavior. Synthesis and place-and-route are required
 to validate the two-tile area target and timing. The GDS workflow targets IHP26b
 with the `ihp-sg13g2` PDK.
+
+
+## BNN configurations
+
+Experiment 57 defaults to eight neurons. The tests automatically detect the built
+neuron count through the NEURON register, including changes to the default in RTL.
+No separate test setting is needed. To override the RTL define from the repository
+root, with the simulation environment activated:
+
+```sh
+make -C test COCOTB_TEST_MODULES=test_57_bnn \
+  SIM_BUILD=/tmp/chiplab-bnn-4 COMPILE_ARGS="-I../src -DBNN_NEURON_COUNT=4"
+```
+
+Valid counts are 1 through 8, including non-powers of two. The module's `initial`
+assertion terminates simulation for invalid counts; it is excluded from synthesis.
+Use separate build directories when changing defines to avoid stale simulator binaries.

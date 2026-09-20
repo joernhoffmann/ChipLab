@@ -65,6 +65,7 @@ HANDSHAKE = 51
 PARKING_COUNTER = 52
 MULTIPLIER = 53
 PSG = 56
+BNN = 57
 SETTLE_NS = 10
 
 def initialize(dut):

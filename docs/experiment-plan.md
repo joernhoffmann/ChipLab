@@ -84,7 +84,8 @@ Additional storage experiments (existing numbers retained):
 
 ## 8. FSM-Controlled Datapaths
 
-53. Sequential multiplier (shift-and-add datapath controlled by an FSM)
+- **53. Sequential multiplier:** shift-and-add datapath controlled by an FSM.
+- **57. Binarized neural network:** 1–8 neurons sharing XNOR, popcount, and threshold logic.
 
 ## 9. Sound
 
@@ -99,6 +100,7 @@ synthesis and place-and-route.
 |---|---|
 | Arithmetic, ALU, and accumulator operands | 4 bits |
 | Sequential multiplier | 4 × 4 bits, 8-bit result |
+| Binarized neural network | 1–8 neurons, 8 inputs, 8-bit weights and 4-bit thresholds per neuron |
 | Registers and counters | 4 or 8 bits |
 | Read/write memory | 4 words × 4 bits |
 | FIFO and stack | 4 entries × 4 bits each |
@@ -109,7 +111,7 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–56 are implemented. `uio_in[5:0]` selects the experiment using its
+Experiments 1–57 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Storage, timing, and FSM experiments use `clk` and `rst_n`.

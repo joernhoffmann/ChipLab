@@ -69,9 +69,10 @@ are unused. Results appear on `uo_out[7:0]`. Section 2 uses the mappings below.
 | `0x36` | 4 × 4-bit FIFO |
 | `0x37` | 4 × 4-bit stack |
 | `0x38` | Programmable sound generator |
+| `0x39` | Binarized neural network |
 | All other codes | All outputs zero |
 
-Experiments 1–22 are combinational. Experiments 23–56 store state and use
+Experiments 1–22 are combinational. Experiments 23–57 store state and use
 `clk` or latch controls. `rst_n` resets their state. Allow signals to settle
 before sampling.
 
@@ -335,6 +336,56 @@ retaining the product. Deselecting pauses the calculation; reset aborts it.
 
 For 7 × 15, apply `ui_in = 0xF7`, pulse start, and wait four more edges.
 The product is 105 (`0x69`).
+
+### Binarized neural network
+
+Experiment 57 (`0x39`) implements one binary layer with eight shared input bits.
+`BNN_NEURON_COUNT` selects 1–8 neurons at synthesis time (default: 8). A simulation
+assertion rejects counts outside this range. Weights and thresholds are programmed
+through registers; training takes place outside the chip.
+
+Each neuron compares its eight weight bits with the input using XNOR. A balanced
+popcount tree counts the matching bits (0–8). Its output is one when the count is
+at least the programmed threshold. Bits represent -1 and +1, so the corresponding
+signed dot product is `2 * count - 8`. The hardware only needs the match count.
+Threshold 0 always passes; thresholds 9–15 always fail.
+
+| `uio_in[7:6]` | Action |
+|---|---|
+| `00` | Calculate one neuron per selected rising edge, if enabled and not finished |
+| `01` | Latch the register address from `ui_in` |
+| `10` | Write `ui_in` to the selected register |
+| `11` | Read the selected register on `uo_out` |
+
+| Address | Register | Meaning |
+|---|---|---|
+| `0x00` | INPUT | Eight shared input bits |
+| `0x01` | CONTROL | Calculation enable in bit 0 |
+| `0x02` | OUTPUT | One result bit per neuron, read-only |
+| `0x03` | STATUS | Result valid in bit 0, read-only |
+| `0x04` | NEURON | Neuron selected for configuration and diagnostics |
+| `0x05` | WEIGHTS | Eight weights of the selected neuron |
+| `0x06` | THRESHOLD | Threshold of the selected neuron, bits 3:0 |
+| `0x07` | MATCHES | Live XNOR result of the selected neuron, read-only |
+| `0x08` | COUNT | Live match count of the selected neuron, read-only |
+
+One shared datapath processes the neurons in ascending order. After exactly
+`BNN_NEURON_COUNT` processing edges, STATUS becomes 1 and the complete result
+holds. Other bus operations, disable, and deselection pause the calculation.
+Outside read mode, `uo_out` shows OUTPUT; partial results are visible before
+STATUS becomes 1. Unused high result bits are zero.
+
+Writing INPUT, WEIGHTS, or THRESHOLD clears OUTPUT and STATUS and restarts the
+sequence at neuron zero. Selecting a neuron does not restart calculation.
+Out-of-range neuron selections are ignored (the previous selection remains).
+Writes to read-only or unused registers are ignored; unused addresses read zero.
+Reset clears the weight bank, thresholds, input, result, and enable. Diagnostics
+are combinational: immediately after reset, MATCHES is `0xFF` and COUNT is 8.
+
+Example for neuron zero: program INPUT=`0xB2`, WEIGHTS=`0xB0`, THRESHOLD=7, then
+enable calculation and apply the required processing edges. MATCHES is `0xFD`,
+COUNT is 7, and OUTPUT bit 0 is one. Program the other thresholds above 8 to
+suppress their output bits.
 
 ## Sound
 

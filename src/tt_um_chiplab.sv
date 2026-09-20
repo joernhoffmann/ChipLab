@@ -199,6 +199,12 @@ module tt_um_chiplab (
         .multiplier_result(multiplier_result)
     );
 
+    wire [7:0] bnn_result;
+    chiplab_08_bnn bnn (
+        .clk(clk), .rst_n(rst_n), .selection(uio_in[5:0]),
+        .operation(uio_in[7:6]), .data(ui_in), .bnn_result(bnn_result)
+    );
+
     // ------------------------------------------------------------------------
     // Group 9: Sound
     // ------------------------------------------------------------------------
@@ -269,6 +275,7 @@ module tt_um_chiplab (
             `EXP_PARKING_COUNTER: uo_out = parking_result;
             `EXP_MULTIPLIER: uo_out = multiplier_result;
             `EXP_PSG: uo_out = psg_result;
+            `EXP_BNN: uo_out = bnn_result;
             default: uo_out = 8'b0;
         endcase
     end

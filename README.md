@@ -15,7 +15,7 @@ simulated, and implemented in synthesizable SystemVerilog.
   counters, FIFO and stack storage, input synchronization, and timing circuits.
 - **Finite state machines:** Moore and Mealy control, traffic lights, handshake,
   and parking lot occupancy.
-- **FSM-controlled datapaths:** sequential multiplier.
+- **FSM-controlled datapaths:** sequential multiplier and binarized neural network.
 - **Sound:** programmable sound generator.
 
 ## Documentation
