@@ -26,11 +26,13 @@ async def test_multiplier(dut):
             assert await step(dut, MULTIPLIER, 0, 0) == a * b
 
     # Pause a running calculation by selecting another experiment.
-    assert await step(dut, MULTIPLIER, 0xF7, 3) == 5
-    assert await step(dut, MULTIPLIER, 0, 2) == 21
+    assert await step(dut, MULTIPLIER, 0xF7, 3) == 5    # Start the multiplier with modified inputs
+    assert await step(dut, MULTIPLIER, 0, 2) == 21      # Pause the multiplier by selecting another experiment
+
     for _ in range(3):
         await step(dut, 0, 0)
     assert await sample(dut, MULTIPLIER, 0, 2) == 21
+
     for _ in range(3):
         await step(dut, MULTIPLIER, 0, 2)
     assert await sample(dut, MULTIPLIER, 0) == 105

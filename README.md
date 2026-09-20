@@ -12,10 +12,11 @@ simulated, and implemented in synthesizable SystemVerilog.
 - **Combinatorial logic:** multiplexers, encoders, decoders, arithmetic,
   comparisons, shifts, and an ALU.
 - **Clocked logic:** latches, flip-flops, registers, memories, shift registers,
-  counters, input synchronization, and timing circuits.
-- **Advanced designs:** finite state machines, FSM-controlled datapaths, a
-  sequential multiplier, FIFO and stack storage, and a programmable sound
-  generator.
+  counters, FIFO and stack storage, input synchronization, and timing circuits.
+- **Finite state machines:** Moore and Mealy control, traffic lights, handshake,
+  and parking lot occupancy.
+- **FSM-controlled datapaths:** sequential multiplier.
+- **Sound:** programmable sound generator.
 
 ## Documentation
 

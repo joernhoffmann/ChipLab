@@ -1,7 +1,7 @@
 # ChipLab
 
 ChipLab is an educational digital logic chip for Tiny Tapeout IHP26b.
-Sections 1–8 are implemented, from basic logic to FSM-controlled datapaths.
+Sections 1–9 are implemented, from basic logic to FSM-controlled datapaths and sound.
 
 ## How it works
 
@@ -314,6 +314,8 @@ Selection and enable pause the state and count; event pulses still clear.
 Reset clears the count and returns to idle. A sensor sequence already in progress
 at reset cannot reliably identify a complete crossing.
 
+## FSM-Controlled Datapaths
+
 ### Sequential multiplier
 
 Select `0x35`. Inputs `ui_in[3:0]` and `ui_in[7:4]` are unsigned operands
@@ -333,6 +335,8 @@ retaining the product. Deselecting pauses the calculation; reset aborts it.
 
 For 7 × 15, apply `ui_in = 0xF7`, pulse start, and wait four more edges.
 The product is 105 (`0x69`).
+
+## Sound
 
 ### Programmable sound generator
 

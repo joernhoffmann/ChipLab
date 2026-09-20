@@ -6,11 +6,11 @@ import cocotb
 
 from chiplab_helpers import STACK, reset_manual, sample, step
 
-
+# Stack operation codes and status flags.
 HOLD, PUSH, POP, RESERVED = range(4)
 EMPTY = 1 << 7
 
-
+# Helper function to compute the expected output of the stack.
 def expected_output(items):
     count = len(items)
     value = items[-1] if items else 0

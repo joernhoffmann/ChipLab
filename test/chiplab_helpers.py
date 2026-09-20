@@ -67,7 +67,6 @@ MULTIPLIER = 53
 PSG = 56
 SETTLE_NS = 10
 
-
 def initialize(dut):
     """Select no experiment and drive every input to a known state.
 
@@ -80,7 +79,6 @@ def initialize(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
 
-
 async def start_and_reset(dut):
     """Start the 50 MHz test clock and apply an asynchronous reset."""
     initialize(dut)
@@ -89,7 +87,6 @@ async def start_and_reset(dut):
     await Timer(2, unit="ns")
     dut.rst_n.value = 1
 
-
 async def clock_input(dut, selection, inputs, operation=0):
     """Apply inputs, wait for a rising edge, and return the output."""
     dut.uio_in.value = selection | (operation << 6)
@@ -97,7 +94,6 @@ async def clock_input(dut, selection, inputs, operation=0):
     await RisingEdge(dut.clk)
     await Timer(1, unit="ns")
     return int(dut.uo_out.value)
-
 
 async def sample(dut, selection, inputs, operation=0):
     """Apply selection and input bytes, settle, and return the output byte."""
@@ -108,7 +104,6 @@ async def sample(dut, selection, inputs, operation=0):
     assert int(dut.uio_oe.value) == 0, f"Selection pins must remain inputs: {context}"
     assert int(dut.uio_out.value) == 0, f"Unused IO output bus must be zero: {context}"
     return int(dut.uo_out.value)
-
 
 async def reset_manual(dut):
     """Reset with a stopped clock, including synchronous reset registers."""
@@ -121,7 +116,6 @@ async def reset_manual(dut):
     dut.rst_n.value = 1
     await Timer(10, unit="ns")
 
-
 async def step(dut, selection, inputs, operation=0):
     """Set up inputs, apply one clock edge, then read the settled output."""
     await sample(dut, selection, inputs, operation)
@@ -131,7 +125,6 @@ async def step(dut, selection, inputs, operation=0):
     dut.clk.value = 0
     await Timer(10, unit="ns")
     return output
-
 
 def check_bit(output, bit, expected, expression, inputs):
     """Report the exact output function and inputs when a truth-table row fails."""
