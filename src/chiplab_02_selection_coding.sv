@@ -86,7 +86,10 @@ module chiplab_02_selection_coding (
 
     assign dual_priority = {second_valid, second, first_valid, first};
 
+    // ------------------------------------------------------------------------
+    // Shared 7-segment decoder function
     // Shared decoder: active-high segments, bits [6:0] = gfedcba.
+    // ------------------------------------------------------------------------
     function automatic logic [6:0] seven_segment(input logic [3:0] digit);
         case (digit)
             4'h0: seven_segment = 7'b0111111;   // Digit 0, Segments f, e, d, c, b, a
@@ -96,9 +99,9 @@ module chiplab_02_selection_coding (
             4'h4: seven_segment = 7'b1100110;
             4'h5: seven_segment = 7'b1101101;
             4'h6: seven_segment = 7'b1111101;
-            4'h7: seven_segment = 7'b0000111;   // ...
+            4'h7: seven_segment = 7'b0000111;
             4'h8: seven_segment = 7'b1111111;
-            4'h9: seven_segment = 7'b1101111;
+            4'h9: seven_segment = 7'b1101111;   // Digit 9, last digit for BCD.
             4'hA: seven_segment = 7'b1110111;
             4'hB: seven_segment = 7'b1111100;
             4'hC: seven_segment = 7'b0111001;
@@ -113,21 +116,30 @@ module chiplab_02_selection_coding (
 
     // ------------------------------------------------------------------------
     // Experiment 9: BCD-to-7-segment decoder
-    // Display digits 0-9; values 10-15 blank the display.
+    // Display digits 0-9
+    // Values 10-15 blank the display.
     // ------------------------------------------------------------------------
-    assign bcd_segments = data[3:0] <= 4'd9 ? hex_segments : 8'b0;
+    assign bcd_segments = (data[3:0] <= 4'd9) ? hex_segments : 8'b0;
 
 
     // ------------------------------------------------------------------------
     // Experiment 10: HEX-to-7-segment decoder
-    // Display data[3:0] as 0-9, A, b, C, d, E, or F.
+    // Display data[3:0] as 0..9 and A..F.
     // ------------------------------------------------------------------------
     assign hex_segments = {1'b0, seven_segment(data[3:0])};
 
-
     // ------------------------------------------------------------------------
     // Experiment 11: Binary / Gray conversion
-    // data[4] selects the direction: 0 = binary to Gray, 1 = Gray to binary.
+    // Gray code is used for error detection and correction in digital systems.
+    // Two consecutive binary numbers differ by only one bit.
+    // This property makes Gray code useful for minimizing errors during transitions.
+    // 
+    // data[4] selects the direction
+    // - 0 = binary to Gray
+    // - 1 = Gray to binary.
+    // Computation:
+    // - Binary to Gray:   gray[i] = binary[i+1] ^ binary[i]   for i = 3..0
+    // - Gray to binary: binary[i] =     gray[i] ^ binary[i+1] for i = 3..0
     // ------------------------------------------------------------------------
     wire [3:0] binary_value;
     assign binary_value[3] = data[3];
@@ -141,6 +153,10 @@ module chiplab_02_selection_coding (
     // ------------------------------------------------------------------------
     // Experiment 12: Parity generator and checker
     // Generate even parity for data[6:0] and check the received bit data[7].
+    // Even parity means the total number of 1s in the data plus the parity bit is even.
+    // Computation:
+    // - Parity bit = XOR of all data bits (data[6:0])
+    // - Check: XOR of all data bits *including parity* bit should be 0 for even parity
     // ------------------------------------------------------------------------
     assign parity_result = {6'b0, ^data, ^data[6:0]};
 

@@ -254,7 +254,7 @@ module chiplab_07_state_machines (
                 default: ;
             endcase
 
-            default:
+            default: 
                 if (sensors == 2'b00) begin
                     parking_next = PARK_IDLE;
                 end

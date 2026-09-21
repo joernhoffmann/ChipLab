@@ -73,7 +73,7 @@ module chiplab_08_bnn (
 `endif
 
     // Operations
-    localparam [1:0] OP_PLAY    = 2'd0,
+    localparam [1:0] OP_RUN    = 2'd0,
                      OP_ADDRESS = 2'd1,
                      OP_WRITE   = 2'd2,
                      OP_READ    = 2'd3;
@@ -120,14 +120,17 @@ module chiplab_08_bnn (
         logic [1:0] count_01, count_23, count_45, count_67;
         logic [2:0] count_left, count_right;
 
+        // 2-bit sums
         count_01 = {1'b0, bits[0]} + {1'b0, bits[1]};
         count_23 = {1'b0, bits[2]} + {1'b0, bits[3]};
         count_45 = {1'b0, bits[4]} + {1'b0, bits[5]};
         count_67 = {1'b0, bits[6]} + {1'b0, bits[7]};
 
+        // 3-bit sums 
         count_left  = {1'b0, count_01} + {1'b0, count_23};
         count_right = {1'b0, count_45} + {1'b0, count_67};
 
+        // 4-bit result
         popcount8 = {1'b0, count_left} + {1'b0, count_right};
     endfunction
 
@@ -195,14 +198,14 @@ module chiplab_08_bnn (
     // ------------------------------------------------------------------------
     // Sequential calculation
     // ------------------------------------------------------------------------
-    // - Process one neuron per clock during OP_PLAY.
+    // - Process one neuron per clock during OP_RUN.
     // - A counter selects the weights and destination output bit.
     // - Configuration writes restart calculation without copying the bank.
     always_ff @(posedge clk or negedge rst_n) begin
         // Reset results and progress
         if (!rst_n) begin
             neuron_index <= '0;
-            outputs <= '0;
+            outputs      <= '0;
             result_valid <= 1'b0;
         end
 
@@ -211,12 +214,12 @@ module chiplab_08_bnn (
             // Discard results based on the previous configuration
             if (configuration_write) begin
                 neuron_index <= '0;
-                outputs <= '0;
+                outputs      <= '0;
                 result_valid <= 1'b0;
             end
 
             // Calculate the next neuron
-            else if (operation == OP_PLAY && enable && !result_valid) begin
+            else if (operation == OP_RUN && enable && !result_valid) begin
                 outputs[neuron_index] <= neuron_output;
 
                 // The final output bit and valid flag update on the same edge
