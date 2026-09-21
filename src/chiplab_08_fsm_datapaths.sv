@@ -18,7 +18,7 @@ module chiplab_08_fsm_datapaths (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 53: Sequential multiplier
+    // Experiment 54: Sequential multiplier
     // Capture A and B on start, then shift and add over four clock cycles.
     // ------------------------------------------------------------------------
     localparam [1:0] IDLE = 2'd0, RUN = 2'd1, DONE = 2'd2;
@@ -28,23 +28,25 @@ module chiplab_08_fsm_datapaths (
     logic [7:0] product, shifted_a;
     logic [3:0] remaining_b;
 
-    // Reuse two 4-bit adders from group 3 for the 8-bit sum.
+    // Two separate instances of the group 3 adder module form the 8-bit sum.
     wire [7:0] sum;
-    wire low_carry, high_carry, low_overflow, high_overflow; 
+    wire low_carry, high_carry, low_overflow, high_overflow;
+
+    // Connect the low adder's carry-out to the high adder's carry-in.
     chiplab_adder_4bit low_adder (
-        .a(product[3:0]), 
-        .b(shifted_a[3:0]), 
+        .a(product[3:0]),
+        .b(shifted_a[3:0]),
         .carry_in(1'b0),
-        .sum(sum[3:0]), 
+        .sum(sum[3:0]),
         .carry_out(low_carry),
         .overflow(low_overflow)
     );
     chiplab_adder_4bit high_adder (
-        .a(product[7:4]), 
-        .b(shifted_a[7:4]), 
+        .a(product[7:4]),
+        .b(shifted_a[7:4]),
         .carry_in(low_carry),
-        .sum(sum[7:4]), 
-        .carry_out(high_carry), 
+        .sum(sum[7:4]),
+        .carry_out(high_carry),
         .overflow(high_overflow)
     );
 
@@ -55,32 +57,48 @@ module chiplab_08_fsm_datapaths (
             product <= 8'b0;
             shifted_a <= 8'b0;
             remaining_b <= 4'b0;
-        end else if (selected) begin
+        end
+
+        else if (selected) begin
             case (state)
-                IDLE: if (start) begin
-                    shifted_a <= {4'b0, operand_a};
+                // IDLE state: wait for start signal
+                IDLE: if (start)
+                begin
+                    shifted_a   <= {4'b0, operand_a};
                     remaining_b <= operand_b;
-                    product <= 8'b0;
-                    steps <= 3'b0;
-                    state <= RUN;
+                    product     <= 8'b0;
+                    steps       <= 3'b0;
+                    state       <= RUN;
                 end
+
+                // RUN state: shift and add over four clock cycles
                 RUN: begin
                     if (remaining_b[0])
                         product <= sum;
-                    shifted_a <= shifted_a << 1;
+
+                    shifted_a   <= shifted_a << 1;
                     remaining_b <= remaining_b >> 1;
-                    steps <= steps + 3'd1;
+
+                    steps       <= steps + 3'd1;
                     if (steps == LAST_STEP)
                         state <= DONE;
                 end
+
                 // Holding start high cannot launch the same request twice.
-                DONE: if (!start) state <= IDLE;
-                default: state <= IDLE;
+                DONE: begin
+                    if (!start) state <= IDLE;
+                end
+
+                default:
+                    state <= IDLE;
             endcase
         end
     end
-    assign multiplier_result = show_status
-        ? {1'b0, steps, state, state == DONE, state == RUN}
-        : product;
+
+    // Output the multiplier result based on the show_status signal.
+    wire [7:0] status = {1'b0, steps, state, state == DONE, state == RUN};
+    assign multiplier_result = show_status ? status : product;
+
+    // Mark unused signals to avoid synthesis warnings.
     wire _unused = &{high_carry, low_overflow, high_overflow, 1'b0};
 endmodule

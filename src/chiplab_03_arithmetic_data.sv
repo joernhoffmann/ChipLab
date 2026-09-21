@@ -14,7 +14,7 @@ module chiplab_half_adder (
     output wire carry
 );
     // Sum is the XOR of a and b, carry is the AND of a and b
-    // Truth table 
+    // Truth table
     // a b | sum carry
     // 0 0 |  0    0
     // 0 1 |  1    0
@@ -40,17 +40,17 @@ module chiplab_full_adder (
 
     // First half adder: add a and b
     chiplab_half_adder first_half_adder (
-        .a          (a), 
-        .b          (b), 
-        .sum        (first_sum), 
+        .a          (a),
+        .b          (b),
+        .sum        (first_sum),
         .carry      (first_carry)
     );
 
     // Second half adder: add first sum and carry_in
     chiplab_half_adder second_half_adder (
-        .a          (first_sum), 
-        .b          (carry_in), 
-        .sum        (sum), 
+        .a          (first_sum),
+        .b          (carry_in),
+        .sum        (sum),
         .carry      (second_carry)
     );
 
@@ -67,6 +67,7 @@ module chiplab_adder_4bit (
     input  wire [3:0] a,
     input  wire [3:0] b,
     input  wire       carry_in,
+
     output wire [3:0] sum,
     output wire       carry_out,
     output wire       overflow
@@ -79,10 +80,10 @@ module chiplab_adder_4bit (
     // The carry ripples through the adders, and the final carry_out is taken from the last adder.
     for (genvar i = 0; i < 4; i++) begin : ripple
         chiplab_full_adder full_adder (
-            .a          (a[i]), 
-            .b          (b[i]), 
+            .a          (a[i]),
+            .b          (b[i]),
             .carry_in   (carry[i]),
-            .sum        (sum[i]), 
+            .sum        (sum[i]),
             .carry_out  (carry[i + 1])
         );
     end
@@ -121,32 +122,37 @@ module chiplab_alu_4bit (
 
     logic [3:0] value;
     logic carry, overflow;
-    always_comb begin
-        carry = 1'b0;
-        overflow = 1'b0;
-        case (operation)
-            // 00: Addition
-            2'b00: begin
-                value = arithmetic_value;
-                carry = arithmetic_carry;
-                overflow = arithmetic_overflow;
-            end
-            // 01: Subtraction
-            2'b01: begin
-                value = arithmetic_value;
-                carry = arithmetic_carry;
-                overflow = arithmetic_overflow;
-            end
-            // 10: AND
-            2'b10: value = a & b;
 
-            // 11: OR
-            default: value = a | b;
+    localparam OP_ADD = 2'b00,
+               OP_SUB = 2'b01,
+               OP_AND = 2'b10,
+               OP_OR  = 2'b11;
+
+    always_comb begin
+        carry    = 1'b0;
+        overflow = 1'b0;
+
+        case (operation)
+            OP_ADD: begin
+                value = arithmetic_value;
+                carry = arithmetic_carry;
+                overflow = arithmetic_overflow;
+            end
+
+            OP_SUB: begin
+                value = arithmetic_value;
+                carry = arithmetic_carry;
+                overflow = arithmetic_overflow;
+            end
+
+            OP_AND:  value = a & b;
+            OP_OR:   value = a | b;
+            default: value = 4'b0;
         endcase
 
         // result[7:4] = sign, zero, overflow, carry
         // result[3:0] = operation result
-        result = {value[3], value == 4'b0, overflow, carry, value};
+        result = {value[3], value == 4'b0, overflow, carry, value[3:0]};
     end
 endmodule
 
@@ -220,7 +226,7 @@ module chiplab_03_arithmetic_data (
 
     // ------------------------------------------------------------------------
     // Experiment 17: 4-bit subtractor
-    // Calculate a-b as a+(NOT b)+1 using the same 4-bit adder.
+    // Calculate a-b as a+(NOT b)+1 using a separate instance of the 4-bit adder module.
     // ------------------------------------------------------------------------
     wire [3:0] difference;
     wire no_borrow, subtract_overflow;
@@ -296,7 +302,7 @@ module chiplab_03_arithmetic_data (
 
     // ------------------------------------------------------------------------
     // Experiment 22: ALU
-    // Experiment 33 reuses this ALU with the accumulator as operand A.
+    // Experiment 32 reuses this ALU with the accumulator as operand A.
     // ------------------------------------------------------------------------
     wire [3:0] alu_a = accumulator_selected ? accumulator_value : a;
     wire [3:0] alu_b = accumulator_selected ? data[3:0] : b;

@@ -31,42 +31,41 @@ SIGNED_COMPARATOR = 0x13
 SHIFTS = 0x14
 ROTATION = 0x15
 ALU = 0x16
-SR_LATCH = 0x17
-D_LATCH = 0x18
-D_FLIPFLOP = 0x19
-T_FLIPFLOP = 0x1A
-JK_FLIPFLOP = 0x1B
-LATCH_FLIPFLOP = 0x1C
-RESET = 0x1D
-REGISTER_ENABLE = 0x1E
-REGISTER_CONTROL = 0x1F
-MEMORY = 0x20
-ACCUMULATOR = 0x21
-FIFO = 54
-STACK = 55
-SHIFT_REGISTER = 34
-UNIVERSAL_SHIFT_REGISTER = 35
-BINARY_COUNTER = 36
-UP_DOWN_COUNTER = 37
-MODULO_COUNTER = 38
-BCD_COUNTER = 39
-RING_COUNTER = 40
-JOHNSON_COUNTER = 41
-LFSR = 42
-EDGE_DETECTION = 43
-SYNCHRONIZER = 44
-DEBOUNCER = 45
-CLOCK_ENABLE = 46
-PWM = 47
-MOORE_CONTROL = 48
-MEALY_CONTROL = 49
-TRAFFIC_LIGHT = 50
-HANDSHAKE = 51
-PARKING_COUNTER = 52
-MULTIPLIER = 53
-PSG = 56
+D_LATCH = 0x17
+D_FLIPFLOP = 0x18
+T_FLIPFLOP = 0x19
+JK_FLIPFLOP = 0x1A
+LATCH_FLIPFLOP = 0x1B
+RESET = 0x1C
+REGISTER_ENABLE = 0x1D
+REGISTER_CONTROL = 0x1E
+MEMORY = 0x1F
+ACCUMULATOR = 0x20
+FIFO = 0x21
+STACK = 0x22
+SHIFT_REGISTER = 0x23
+UNIVERSAL_SHIFT_REGISTER = 0x24
+BINARY_COUNTER = 0x25
+UP_DOWN_COUNTER = 0x26
+MODULO_COUNTER = 0x27
+BCD_COUNTER = 0x28
+RING_COUNTER = 0x29
+JOHNSON_COUNTER = 0x2A
+LFSR = 0x2B
+EDGE_DETECTION = 0x2C
+SYNCHRONIZER = 0x2D
+DEBOUNCER = 0x2E
+CLOCK_ENABLE = 0x2F
+PWM = 0x30
+MOORE_CONTROL = 0x31
+MEALY_CONTROL = 0x32
+TRAFFIC_LIGHT = 0x33
+HANDSHAKE = 0x34
+PARKING_COUNTER = 0x35
+MULTIPLIER = 0x36
+BNN = 0x37
+PSG = 0x38
 SETTLE_NS = 10
-
 
 def initialize(dut):
     """Select no experiment and drive every input to a known state.
@@ -80,7 +79,6 @@ def initialize(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
 
-
 async def start_and_reset(dut):
     """Start the 50 MHz test clock and apply an asynchronous reset."""
     initialize(dut)
@@ -89,7 +87,6 @@ async def start_and_reset(dut):
     await Timer(2, unit="ns")
     dut.rst_n.value = 1
 
-
 async def clock_input(dut, selection, inputs, operation=0):
     """Apply inputs, wait for a rising edge, and return the output."""
     dut.uio_in.value = selection | (operation << 6)
@@ -97,7 +94,6 @@ async def clock_input(dut, selection, inputs, operation=0):
     await RisingEdge(dut.clk)
     await Timer(1, unit="ns")
     return int(dut.uo_out.value)
-
 
 async def sample(dut, selection, inputs, operation=0):
     """Apply selection and input bytes, settle, and return the output byte."""
@@ -108,7 +104,6 @@ async def sample(dut, selection, inputs, operation=0):
     assert int(dut.uio_oe.value) == 0, f"Selection pins must remain inputs: {context}"
     assert int(dut.uio_out.value) == 0, f"Unused IO output bus must be zero: {context}"
     return int(dut.uo_out.value)
-
 
 async def reset_manual(dut):
     """Reset with a stopped clock, including synchronous reset registers."""
@@ -121,7 +116,6 @@ async def reset_manual(dut):
     dut.rst_n.value = 1
     await Timer(10, unit="ns")
 
-
 async def step(dut, selection, inputs, operation=0):
     """Set up inputs, apply one clock edge, then read the settled output."""
     await sample(dut, selection, inputs, operation)
@@ -131,7 +125,6 @@ async def step(dut, selection, inputs, operation=0):
     dut.clk.value = 0
     await Timer(10, unit="ns")
     return output
-
 
 def check_bit(output, bit, expected, expression, inputs):
     """Report the exact output function and inputs when a truth-table row fails."""

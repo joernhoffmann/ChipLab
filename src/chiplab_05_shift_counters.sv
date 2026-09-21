@@ -18,6 +18,7 @@ module chiplab_05_shift_counters (
     output wire [7:0] johnson_counter_result,
     output wire [7:0] lfsr_result
 );
+    // Internal enable signal derived from data[4]
     wire enable = data[4];
 
     // Decode the experiment number
@@ -42,15 +43,16 @@ module chiplab_05_shift_counters (
     wire enable_johnson   = select_johnson  && enable;
     wire enable_lfsr      = select_lfsr     && enable;
 
-
     // ------------------------------------------------------------------------
-    // Experiment 34: Shift register
-    // Shift left; data[0] is serial input and data[4] enables shifting.
+    // Experiment 35: Shift register
+    // - shifts data in and to the left
+    // - data[0] is serial input
     // ------------------------------------------------------------------------
     logic [3:0] shift_register;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             shift_register <= 4'd0;
+
         else if (enable_shift) begin
             shift_register <= {shift_register[2:0], data[0]};
         end
@@ -59,33 +61,47 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 35: Universal shift register
-    // operation: 00 hold, 01 left, 10 right, 11 load data[3:0].
+    // Experiment 36: Universal shift register
+    // Operation:
+    //  - 00 hold
+    //  - 01 left
+    //  - 10 right
+    //  - 11 load data[3:0]
     // ------------------------------------------------------------------------
     logic [3:0] universal_shift_register;
+    localparam [1:0]
+        OP_HOLD        = 2'b00,
+        OP_SHIFT_LEFT  = 2'b01,
+        OP_SHIFT_RIGHT = 2'b10,
+        OP_LOAD        = 2'b11;
+
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             universal_shift_register <= 4'd0;
+
         else if (enable_universal) begin
             case (operation)
-                2'b01: universal_shift_register <= {universal_shift_register[2:0], data[0]};
-                2'b10: universal_shift_register <= {data[0], universal_shift_register[3:1]};
-                2'b11: universal_shift_register <= data[3:0];
+                OP_HOLD:        universal_shift_register <= universal_shift_register;
+                OP_SHIFT_LEFT:  universal_shift_register <= {universal_shift_register[2:0], data[0]};
+                OP_SHIFT_RIGHT: universal_shift_register <= {data[0], universal_shift_register[3:1]};
+                OP_LOAD:        universal_shift_register <= data[3:0];
                 default: ;
             endcase
         end
     end
+
     assign universal_shift_register_result = {4'b0, universal_shift_register};
 
 
     // ------------------------------------------------------------------------
-    // Experiment 36: Binary counter
-    // Count 0 through 15 while data[4] is high.
+    // Experiment 37: Binary counter
+    // Count 0 through 15.
     // ------------------------------------------------------------------------
     logic [3:0] binary_counter;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             binary_counter <= 4'd0;
+
         else if (enable_binary) begin
             binary_counter <= binary_counter + 4'd1;
         end
@@ -94,29 +110,35 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 37: Up/down counter
-    // data[0]: 0 counts up, 1 counts down; data[4] enables counting.
+    // Experiment 38: Up/down counter
+    // data[0]: 0 counts up, 1 counts down
     // ------------------------------------------------------------------------
     logic [3:0] up_down_counter;
+    wire dir_down = data[0];
+
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             up_down_counter <= 4'd0;
+
         else if (enable_up_down) begin
-            up_down_counter <= data[0] ? up_down_counter - 4'd1 : up_down_counter + 4'd1;
+            // Increment up/down counter based on data[0]
+            up_down_counter <= dir_down ? up_down_counter - 4'd1 : up_down_counter + 4'd1;
         end
     end
     assign up_down_counter_result = {4'b0, up_down_counter};
 
 
     // ------------------------------------------------------------------------
-    // Experiment 38: Modulo-6 counter
-    // Count 0 through 5, then wrap to 0; data[4] enables counting.
+    // Experiment 39: Modulo-6 counter
+    // Count 0 through 5, then wrap to 0
     // ------------------------------------------------------------------------
     logic [3:0] modulo_counter;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             modulo_counter <= 4'd0;
+
         else if (enable_modulo) begin
+            // Increment modulo-6 counter, wrap to 0 after 5
             modulo_counter <= modulo_counter == 4'd5 ? 4'd0 : modulo_counter + 4'd1;
         end
     end
@@ -124,14 +146,16 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 39: BCD counter
-    // Count 0 through 9, then wrap to 0; data[4] enables counting.
+    // Experiment 40: BCD counter
+    // Count 0 through 9, then wrap to 0
     // ------------------------------------------------------------------------
     logic [3:0] bcd_counter;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             bcd_counter <= 4'd0;
+
         else if (enable_bcd) begin
+            // Increment BCD counter, wrap to 0 after 9
             bcd_counter <= bcd_counter == 4'd9 ? 4'd0 : bcd_counter + 4'd1;
         end
     end
@@ -139,13 +163,15 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 40: Ring counter
-    // Rotate one set bit; reset seeds 0001 and data[4] enables rotation.
+    // Experiment 41: Ring counter
+    // Rotate one set bit
+    // Reset seeds "0001"
     // ------------------------------------------------------------------------
     logic [3:0] ring_counter;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             ring_counter <= 4'd1;
+
         else if (enable_ring) begin
             ring_counter <= {ring_counter[2:0], ring_counter[3]};
         end
@@ -154,13 +180,14 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 41: Johnson counter
-    // Feed the inverted high bit back into bit 0; data[4] enables shifting.
+    // Experiment 42: Johnson counter
+    // Feed the inverted high bit back into bit 0
     // ------------------------------------------------------------------------
     logic [3:0] johnson_counter;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             johnson_counter <= 4'd0;
+
         else if (enable_johnson) begin
             johnson_counter <= {johnson_counter[2:0], ~johnson_counter[3]};
         end
@@ -169,15 +196,17 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 42: LFSR
-    // XOR bits 3 and 2 for a 15-state sequence; reset seeds 0001.
-    // Tap polynomial: x^4 + x^3 + 1 (stages 4 and 3, left shift).
-    // Forward recurrence: s[n+4] = s[n+1] XOR s[n].
+    // Experiment 43: LFSR
+    // XOR bits 3 and 2 for a 15-state sequence.
+    // - Tap polynomial       : x^4 + x^3 + 1 (stages 4 and 3, left shift)
+    // - Forward recurrence   : s[n+4] = s[n+1] XOR s[n]
+    // Reset seeds "0001"
     // ------------------------------------------------------------------------
     logic [3:0] lfsr;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             lfsr <= 4'd1;
+
         else if (enable_lfsr) begin
             lfsr <= {lfsr[2:0], lfsr[3] ^ lfsr[2]};
         end

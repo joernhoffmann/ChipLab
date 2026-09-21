@@ -34,47 +34,47 @@
 `define EXP_ALU 6'd22
 
 // Storage Elements and Memory
-`define EXP_SR_LATCH 6'd23
-`define EXP_D_LATCH 6'd24
-`define EXP_D_FLIPFLOP 6'd25
-`define EXP_T_FLIPFLOP 6'd26
-`define EXP_JK_FLIPFLOP 6'd27
-`define EXP_LATCH_FLIPFLOP 6'd28
-`define EXP_RESET 6'd29
-`define EXP_REGISTER_ENABLE 6'd30
-`define EXP_REGISTER_CONTROL 6'd31
-`define EXP_MEMORY 6'd32
-`define EXP_ACCUMULATOR 6'd33
-`define EXP_FIFO 6'd54
-`define EXP_STACK 6'd55
+`define EXP_D_LATCH 6'd23
+`define EXP_D_FLIPFLOP 6'd24
+`define EXP_T_FLIPFLOP 6'd25
+`define EXP_JK_FLIPFLOP 6'd26
+`define EXP_LATCH_FLIPFLOP 6'd27
+`define EXP_RESET 6'd28
+`define EXP_REGISTER_ENABLE 6'd29
+`define EXP_REGISTER_CONTROL 6'd30
+`define EXP_MEMORY 6'd31
+`define EXP_ACCUMULATOR 6'd32
+`define EXP_FIFO 6'd33
+`define EXP_STACK 6'd34
 
 // Shift Registers and Counters
-`define EXP_SHIFT_REGISTER 6'd34
-`define EXP_UNIVERSAL_SHIFT_REGISTER 6'd35
-`define EXP_BINARY_COUNTER 6'd36
-`define EXP_UP_DOWN_COUNTER 6'd37
-`define EXP_MODULO_COUNTER 6'd38
-`define EXP_BCD_COUNTER 6'd39
-`define EXP_RING_COUNTER 6'd40
-`define EXP_JOHNSON_COUNTER 6'd41
-`define EXP_LFSR 6'd42
+`define EXP_SHIFT_REGISTER 6'd35
+`define EXP_UNIVERSAL_SHIFT_REGISTER 6'd36
+`define EXP_BINARY_COUNTER 6'd37
+`define EXP_UP_DOWN_COUNTER 6'd38
+`define EXP_MODULO_COUNTER 6'd39
+`define EXP_BCD_COUNTER 6'd40
+`define EXP_RING_COUNTER 6'd41
+`define EXP_JOHNSON_COUNTER 6'd42
+`define EXP_LFSR 6'd43
 
 // Input Synchronization and Timing
-`define EXP_EDGE_DETECTION 6'd43
-`define EXP_SYNCHRONIZER 6'd44
-`define EXP_DEBOUNCER 6'd45
-`define EXP_CLOCK_ENABLE 6'd46
-`define EXP_PWM 6'd47
+`define EXP_EDGE_DETECTION 6'd44
+`define EXP_SYNCHRONIZER 6'd45
+`define EXP_DEBOUNCER 6'd46
+`define EXP_CLOCK_ENABLE 6'd47
+`define EXP_PWM 6'd48
 
 // Finite State Machines
-`define EXP_MOORE_CONTROL 6'd48
-`define EXP_MEALY_CONTROL 6'd49
-`define EXP_TRAFFIC_LIGHT 6'd50
-`define EXP_HANDSHAKE 6'd51
-`define EXP_PARKING_COUNTER 6'd52
+`define EXP_MOORE_CONTROL 6'd49
+`define EXP_MEALY_CONTROL 6'd50
+`define EXP_TRAFFIC_LIGHT 6'd51
+`define EXP_HANDSHAKE 6'd52
+`define EXP_PARKING_COUNTER 6'd53
 
 // FSM-Controlled Datapaths
-`define EXP_MULTIPLIER 6'd53
+`define EXP_MULTIPLIER 6'd54
+`define EXP_BNN 6'd55
 
 // Sound
 `define EXP_PSG 6'd56
