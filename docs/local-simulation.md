@@ -28,12 +28,12 @@ uv pip install --python .venv/bin/python -r test/requirements.txt
 . .venv/bin/activate
 ```
 
-uv downloads a separate Python interpreter; it does not replace the system Python
+uv downloads a separate Python interpreter. It does not replace the system Python
 or require the Debian/Ubuntu `python3.13-venv` package. If a previous setup left an
 incomplete `.venv`, rename that directory before creating the new environment.
 
 Python 3.11 matches CI. Python 3.12 and 3.13 are also listed in the
-[cocotb 2.0.1 support matrix](https://docs.cocotb.org/en/v2.0.1/platform_support.html);
+[cocotb 2.0.1 support matrix](https://docs.cocotb.org/en/v2.0.1/platform_support.html).
 Python 3.14 is not listed.
 
 The repository also includes a development container configuration.
@@ -77,7 +77,7 @@ by `test/tb.v`. Each experiment has its own test file: `test/test_01_basic_gates
 `test/test_interface.py`. See [the test guide](../test/README.md) for individual
 test commands and the test structure.
 
-The current RTL implements sections 1–8 in SystemVerilog.
+The current RTL implements sections 1–9 in SystemVerilog.
 See [the project description](info.md) for selection codes, pin assignments, and
 output functions. The cocotb tests check truth tables, selection decoding, and
 control-input independence.
@@ -91,7 +91,7 @@ verilator --lint-only -Wall -Isrc --top-module tt_um_chiplab src/*.sv
 ```
 
 The RTL module names match their `.sv` filenames. Icarus uses SystemVerilog
-2012 mode through the cocotb Makefile; `TOPLEVEL_LANG` remains `verilog` for
+2012 mode through the cocotb Makefile. `TOPLEVEL_LANG` remains `verilog` for
 SystemVerilog sources.
 
 ## Gate-Level Simulation
@@ -111,16 +111,16 @@ with the `ihp-sg13g2` PDK.
 
 ## BNN configurations
 
-Experiment 57 defaults to eight neurons. The tests automatically detect the built
+Experiment 55 defaults to one neuron. The tests automatically detect the built
 neuron count through the NEURON register, including changes to the default in RTL.
 No separate test setting is needed. To override the RTL define from the repository
 root, with the simulation environment activated:
 
 ```sh
-make -C test COCOTB_TEST_MODULES=test_57_bnn \
+make -C test COCOTB_TEST_MODULES=test_55_bnn \
   SIM_BUILD=/tmp/chiplab-bnn-4 COMPILE_ARGS="-I../src -DBNN_NEURON_COUNT=4"
 ```
 
 Valid counts are 1 through 8, including non-powers of two. The module's `initial`
-assertion terminates simulation for invalid counts; it is excluded from synthesis.
+assertion terminates simulation for invalid counts. It is excluded from synthesis.
 Use separate build directories when changing defines to avoid stale simulator binaries.

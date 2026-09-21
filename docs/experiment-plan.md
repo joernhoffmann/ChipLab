@@ -37,59 +37,55 @@ and finite state machines with datapaths.
 
 ## 4. Storage Elements and Memory
 
-23. Reserved (former SR latch; outputs zero)
-24. D latch
-25. D flip-flop
-26. T flip-flop
-27. JK flip-flop
-28. D flip-flop - comparison with the D latch
-29. Synchronous and asynchronous reset
-30. Register with enable
-31. Register with parallel load, hold, and clear
-32. Small read/write memory
-33. Accumulator (with ALU, result register, and feedback)
-
-Additional storage experiments (existing numbers retained):
-
-- **54. FIFO:** 4 × 4 bits, oldest entry first.
-- **55. Stack:** 4 × 4 bits, newest entry first.
+23. D latch
+24. D flip-flop
+25. T flip-flop
+26. JK flip-flop
+27. D flip-flop - comparison with the D latch
+28. Synchronous and asynchronous reset
+29. Register with enable
+30. Register with parallel load, hold, and clear
+31. Small read/write memory
+32. Accumulator (with ALU, result register, and feedback)
+33. FIFO: 4 × 4 bits, oldest entry first
+34. Stack: 4 × 4 bits, newest entry first
 
 ## 5. Shift Registers and Counters
 
-34. Shift register
-35. Universal shift register (parallel load and left/right shift)
-36. Binary counter
-37. Up/down counter
-38. Modulo counter
-39. BCD counter
-40. Ring counter
-41. Johnson counter
-42. Linear-feedback shift register (LFSR)
+35. Shift register
+36. Universal shift register (parallel load and left/right shift)
+37. Binary counter
+38. Up/down counter
+39. Modulo counter
+40. BCD counter
+41. Ring counter
+42. Johnson counter
+43. Linear-feedback shift register (LFSR)
 
 ## 6. Input Synchronization and Timing
 
-43. Edge detection and pulse generation
-44. Synchronization of asynchronous inputs
-45. Push-button debouncing
-46. Clock division using clock enable
-47. Pulse-width modulation (PWM)
+44. Edge detection and pulse generation
+45. Synchronization of asynchronous inputs
+46. Push-button debouncing
+47. Clock division using clock enable
+48. Pulse-width modulation (PWM)
 
 ## 7. Finite State Machines
 
-48. Moore release control (IDLE / ACTIVE)
-49. Mealy release control (IDLE / ACTIVE, with request)
-50. Traffic light controller
-51. Handshake controller
-52. Parking lot occupancy counter (two sensors, direction detection)
+49. Moore release control (IDLE / ACTIVE)
+50. Mealy release control (IDLE / ACTIVE, with request)
+51. Traffic light controller
+52. Handshake controller
+53. Parking lot occupancy counter (two sensors, direction detection)
 
 ## 8. FSM-Controlled Datapaths
 
-- **53. Sequential multiplier:** shift-and-add datapath controlled by an FSM.
-- **57. Binarized neural network:** 1–8 neurons sharing XNOR, popcount, and threshold logic.
+- 54. **Sequential multiplier:** shift-and-add datapath controlled by an FSM.
+- 55. **Binarized neural network:** 1–8 neurons sharing XNOR, popcount, and threshold logic.
 
 ## 9. Sound
 
-56. Programmable sound generator (register bank, tone/noise, decay envelope, PWM)
+56. **Programmable sound generator:** register bank, tone/noise, decay envelope, PWM
 
 ## Design Targets
 
@@ -111,11 +107,11 @@ experiment. State machines should expose their state for observation.
 
 ## Experiment Interface
 
-Experiments 1–22 and 24–57 are implemented; code 23 is reserved. `uio_in[5:0]` selects the experiment using its
+Experiments 1–56 are implemented. `uio_in[5:0]` selects the experiment using its
 number. `uio_in[7:6]` selects an operation where needed. Other codes return zero.
 See [the project description](info.md) for pin mappings and behavior.
 Clocked storage, timing, and FSM experiments use `clk` and `rst_n`.
-The D latches in experiments 24 and 28 have no reset and must be initialized through their gate.
+The D latches in experiments 23 and 27 have no reset and must be initialized through their gate.
 
 ## Implementation Considerations
 

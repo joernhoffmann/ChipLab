@@ -133,7 +133,7 @@ module chiplab_08_bnn (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 57: Shared neuron datapath
+    // Experiment 55: Shared neuron datapath
     // ------------------------------------------------------------------------
     // - Calculation uses neuron_index.
     // - Readback uses neuron_select.

@@ -32,7 +32,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 24: D latch (data latch)
+    // Experiment 23: D latch (data latch)
     // Follows data[0] while selected and data[1] is high; otherwise holds its value.
     // No reset: open the gate once to establish a known value after power-up.
     // Output:
@@ -49,7 +49,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 25: D flip-flop (data flip-flop)
+    // Experiment 24: D flip-flop (data flip-flop)
     // Captures data[0] on the rising clock edge.
     // ----------------------------------------------------------------------------------------------------------------
     logic d_ff_q;
@@ -66,7 +66,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 28: D latch and D flip-flop comparison
+    // Experiment 27: D latch and D flip-flop comparison
     // Compares the level-sensitive D latch with the edge-triggered D flip-flop.
     // Only the flip-flop has a reset; initialize the latch by opening its gate.
     // ----------------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 26: T flip-flop (toggle flip-flop)
+    // Experiment 25: T flip-flop (toggle flip-flop)
     // Toggle on each rising clock edge while data[0] is high.
     // ----------------------------------------------------------------------------------------------------------------
     logic t_q;
@@ -105,7 +105,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 27: JK flip-flop (jump-kill flip-flop)
+    // Experiment 26: JK flip-flop (jump-kill flip-flop)
     // Jump means set Q to 1, kill means reset Q to 0.
     // The JK flip-flop is a combination of the sr flip-flop and the toggle flip-flop.
     // data[0] is J and data[1] is K.
@@ -131,7 +131,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 29: Flipflops with synchronous and asynchronous reset
+    // Experiment 28: Flipflops with synchronous and asynchronous reset
     // Both flip-flops load data [0]
     // Bit 0:  sync reset flip-flop
     // Bit 1: async reset flip-flop
@@ -158,7 +158,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 30: Register with enable
+    // Experiment 29: Register with enable
     // Load data[3:0] on a rising edge while data[4] is high.
     // ----------------------------------------------------------------------------------------------------------------
     logic [3:0] enable_register;
@@ -174,7 +174,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 31: Register with load, hold, and clear
+    // Experiment 30: Register with load, hold, and clear
     // data[5:4] selects hold, load, clear, or load; data[3:0] is the input.
     // ----------------------------------------------------------------------------------------------------------------
     logic [3:0] control_register;
@@ -197,7 +197,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 32: Small read/write memory
+    // Experiment 31: Small read/write memory
     // ----------------------------------------------------------------------------------------------------------------
     (* mem2reg *) logic [3:0] memory[0:3];          // Yosys: infer flip-flops instead of memory / blockram etc.
     wire [1:0] address = data[5:4];
@@ -220,7 +220,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 33: Accumulator
+    // Experiment 32: Accumulator
     // - data[3:0] : operand
     // - data[4]   : enables update
     // - data[5]   : clears accumulator
@@ -244,7 +244,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 54 to 55
+    // Experiment 33 to 34
     // Shared buffer commands:
     //  - 00/11 hold
     //  - 01 push
@@ -255,7 +255,7 @@ module chiplab_04_storage_memory (
     wire [3:0] write_data = data[3:0];
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 54: FIFO
+    // Experiment 33: FIFO
     // Four nibbles, oldest first.
     // Full also supplies bit 2 of the fill count.
     // ----------------------------------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ module chiplab_04_storage_memory (
 
 
     // ----------------------------------------------------------------------------------------------------------------
-    // Experiment 55: Stack
+    // Experiment 34: Stack
     // Four nibbles, newest first.
     // Push on full and pop on empty do nothing.
     // ----------------------------------------------------------------------------------------------------------------

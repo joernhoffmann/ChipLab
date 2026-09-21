@@ -302,7 +302,7 @@ module chiplab_03_arithmetic_data (
 
     // ------------------------------------------------------------------------
     // Experiment 22: ALU
-    // Experiment 33 reuses this ALU with the accumulator as operand A.
+    // Experiment 32 reuses this ALU with the accumulator as operand A.
     // ------------------------------------------------------------------------
     wire [3:0] alu_a = accumulator_selected ? accumulator_value : a;
     wire [3:0] alu_b = accumulator_selected ? data[3:0] : b;

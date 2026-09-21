@@ -44,7 +44,7 @@ module chiplab_05_shift_counters (
     wire enable_lfsr      = select_lfsr     && enable;
 
     // ------------------------------------------------------------------------
-    // Experiment 34: Shift register
+    // Experiment 35: Shift register
     // - shifts data in and to the left
     // - data[0] is serial input
     // ------------------------------------------------------------------------
@@ -61,7 +61,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 35: Universal shift register
+    // Experiment 36: Universal shift register
     // Operation:
     //  - 00 hold
     //  - 01 left
@@ -94,7 +94,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 36: Binary counter
+    // Experiment 37: Binary counter
     // Count 0 through 15.
     // ------------------------------------------------------------------------
     logic [3:0] binary_counter;
@@ -110,7 +110,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 37: Up/down counter
+    // Experiment 38: Up/down counter
     // data[0]: 0 counts up, 1 counts down
     // ------------------------------------------------------------------------
     logic [3:0] up_down_counter;
@@ -129,7 +129,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 38: Modulo-6 counter
+    // Experiment 39: Modulo-6 counter
     // Count 0 through 5, then wrap to 0
     // ------------------------------------------------------------------------
     logic [3:0] modulo_counter;
@@ -146,7 +146,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 39: BCD counter
+    // Experiment 40: BCD counter
     // Count 0 through 9, then wrap to 0
     // ------------------------------------------------------------------------
     logic [3:0] bcd_counter;
@@ -163,7 +163,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 40: Ring counter
+    // Experiment 41: Ring counter
     // Rotate one set bit
     // Reset seeds "0001"
     // ------------------------------------------------------------------------
@@ -180,7 +180,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 41: Johnson counter
+    // Experiment 42: Johnson counter
     // Feed the inverted high bit back into bit 0
     // ------------------------------------------------------------------------
     logic [3:0] johnson_counter;
@@ -196,7 +196,7 @@ module chiplab_05_shift_counters (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 42: LFSR
+    // Experiment 43: LFSR
     // XOR bits 3 and 2 for a 15-state sequence.
     // - Tap polynomial       : x^4 + x^3 + 1 (stages 4 and 3, left shift)
     // - Forward recurrence   : s[n+4] = s[n+1] XOR s[n]

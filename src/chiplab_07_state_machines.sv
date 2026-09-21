@@ -32,7 +32,7 @@ module chiplab_07_state_machines (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 48: Moore control
+    // Experiment 49: Moore control
     // Start enters ACTIVE; stop has priority. Release depends only on the state.
     // ------------------------------------------------------------------------
     logic moore_state, moore_next;
@@ -64,7 +64,7 @@ module chiplab_07_state_machines (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 49: Mealy control
+    // Experiment 50: Mealy control
     // While ACTIVE, release follows release_request without waiting for a clock edge.
     // ------------------------------------------------------------------------
     logic mealy_state, mealy_next;
@@ -96,7 +96,7 @@ module chiplab_07_state_machines (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 50: Traffic light controller
+    // Experiment 51: Traffic light controller
     // Each enabled phase tick advances red, red+amber, green, amber.
     // ------------------------------------------------------------------------
     localparam [1:0]
@@ -135,7 +135,7 @@ module chiplab_07_state_machines (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 51: Handshake controller
+    // Experiment 52: Handshake controller
     // Accept request, wait for complete, then acknowledge until request is low.
     // ------------------------------------------------------------------------
     localparam [1:0]
@@ -170,7 +170,7 @@ module chiplab_07_state_machines (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 52: Parking lot counter
+    // Experiment 53: Parking lot counter
     // Sensors A/B detect direction; count only a complete crossing, not a reversal.
     // ------------------------------------------------------------------------
     wire [1:0] sensors = {data[0], data[1]}; // A, B

@@ -22,7 +22,7 @@ module chiplab_06_input_timing (
     wire signal_in       = data[0];
 
     // ------------------------------------------------------------------------
-    // Experiment 43: Edge detection
+    // Experiment 44: Edge detection
     // Sample a synchronous input; bits 0 and 1 pulse on rising and falling edges.
     // ------------------------------------------------------------------------
     logic previous_input, rise_pulse, fall_pulse;
@@ -43,7 +43,7 @@ module chiplab_06_input_timing (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 44: Input synchronizer
+    // Experiment 45: Input synchronizer
     // Two flip-flops sample an asynchronous input; use only the second stage.
     // ------------------------------------------------------------------------
     (* async_reg = "true" *) logic sync_first, sync_second;
@@ -60,7 +60,7 @@ module chiplab_06_input_timing (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 45: Push-button debouncer
+    // Experiment 46: Push-button debouncer
     // After synchronization, accept a changed level after four equal samples.
     // ------------------------------------------------------------------------
     (* async_reg = "true" *) logic button_first, button_sync;
@@ -96,7 +96,7 @@ module chiplab_06_input_timing (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 46: Clock enable divider
+    // Experiment 47: Clock enable divider
     // Divider generates a tick every limit + 1 enabled clocks.
     // The divider runs synchronously with the main clock.
     // ------------------------------------------------------------------------
@@ -131,7 +131,7 @@ module chiplab_06_input_timing (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 47: PWM
+    // Experiment 48: PWM
     // A 16-clock period
     //  - duty 0    : off
     //  - duty >=16 : fully on

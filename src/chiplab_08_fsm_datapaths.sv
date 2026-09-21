@@ -18,7 +18,7 @@ module chiplab_08_fsm_datapaths (
 
 
     // ------------------------------------------------------------------------
-    // Experiment 53: Sequential multiplier
+    // Experiment 54: Sequential multiplier
     // Capture A and B on start, then shift and add over four clock cycles.
     // ------------------------------------------------------------------------
     localparam [1:0] IDLE = 2'd0, RUN = 2'd1, DONE = 2'd2;

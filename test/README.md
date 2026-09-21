@@ -13,11 +13,13 @@ See below to get started or for more information, check the [website](https://ti
 | `test_02_boolean_identities.py` | Experiment 2: separate tests for De Morgan’s laws, distributivity, and absorption |
 | `test_03_multiplexer.py` through `test_13_rom.py` | One file per section 2 experiment; all 256 input bytes checked |
 | `test_14_half_adder.py` through `test_22_alu.py` | One file per arithmetic experiment |
-| `test_24_d_latch.py` through `test_33_accumulator.py` | One file per storage experiment |
-| `test_34_shift_register.py` through `test_42_lfsr.py` | Shifting, counting, wraparound, hold, and reset |
-| `test_43_edge_detection.py` through `test_47_pwm.py` | Pulses, synchronization, bounce rejection, division, and duty cycles |
-| `test_48_moore_control.py` through `test_52_parking_counter.py` | States, Moore/Mealy outputs, enable, handshakes, and parking counts |
-| `test_53_multiplier.py` | All 256 operand pairs, latency, pause, restart, and reset |
+| `test_23_d_latch.py` through `test_34_stack.py` | One file per storage experiment |
+| `test_35_shift_register.py` through `test_43_lfsr.py` | Shifting, counting, wraparound, hold, and reset |
+| `test_44_edge_detection.py` through `test_48_pwm.py` | Pulses, synchronization, bounce rejection, division, and duty cycles |
+| `test_49_moore_control.py` through `test_53_parking_counter.py` | States, Moore/Mealy outputs, enable, handshakes, and parking counts |
+| `test_54_multiplier.py` | All 256 operand pairs, latency, pause, restart, and reset |
+| `test_55_bnn.py` | Weight and threshold registers, neuron counts, calculation, pause, and reset |
+| `test_56_psg.py` | Register bank, tone, noise, PWM volume, envelope, and prescalers |
 | `test_interface.py` | Selection decoding, unused input bits, and control-input independence |
 
 The experiment tests follow **initialize → apply inputs → wait → check outputs**.
@@ -118,7 +120,7 @@ Using Surfer
 surfer tb.fst
 ```
 
-`test_54_fifo.py` and `test_55_stack.py` belong to group 4. They check ordering,
+`test_33_fifo.py` and `test_34_stack.py` belong to group 4. They check ordering,
 fill count, full/empty, overflow/underflow, slot reuse, selection, and reset.
 
 `test_56_psg.py` checks the PSG register bank, tone period, PWM volume, LFSR
@@ -130,4 +132,4 @@ reset leaves their stored values unchanged. They also cover D-flip-flop hold
 between edges, both register load commands, all memory addresses and nibble
 values, and the accumulator's arithmetic and logical operations.
 
-Experiment code 23 is reserved and returns zero, checked by `test_interface.py`.
+Unused experiment codes (0 and 57–63) return zero, checked by `test_interface.py`.
